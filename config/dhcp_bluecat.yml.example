@@ -1,0 +1,35 @@
+---
+#
+# Configuration file for 'dhcp_bluecat' dhcp provider
+#
+
+#connection mode to the address manager
+#https or http
+:scheme: "https"
+
+# validate ssl connection
+# true or false
+:verify: true
+
+#fqdn or ip of your bluecat address manager
+:host: "192.168.0.2"
+
+# id of the parentBlock that holds the subnets that you want to use
+:parentBlock: 00000
+
+# name of your dns view
+:viewName: "internal"
+
+# id of your Bluecat configuration
+:configId: 000000
+
+# Name of your Bluecat configuration
+:configName: "default"
+
+# id of the server that holds your dhcp
+:serverId: 000000
+
+
+# credentials of your api user
+:username: "username"
+:password: "password"
