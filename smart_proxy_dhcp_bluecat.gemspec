@@ -6,15 +6,15 @@ Gem::Specification.new do |s|
   s.version     = Proxy::DHCP::BlueCat::VERSION
   s.date        = Date.today.to_s
   s.license     = 'GPL-3.0'
-  s.authors     = ['Matthias Hähnel']
-  s.email       = ['matthias.haehnel@sixt.com']
-  s.homepage    = 'https://www.sixt.com'
+  s.authors     = ['Matthias Hähnel', 'The Foreman Team']
+  s.email       = ['matthias.haehnel@sixt.com', 'theforeman.rubygems@gmail.com']
+  s.homepage    = 'https://github.com/theforeman/smart_proxy_dhcp_bluecat'
 
   s.summary     = "BlueCat DHCP provider plugin for Foreman's smart proxy"
   s.description = "BlueCat DHCP provider plugin for Foreman's smart proxy"
 
   s.files       = Dir['{config,lib,bundler.d}/**/*'] + ['README.md', 'LICENSE']
-  s.add_dependency 'savon', '~> 2.0'
-  s.add_dependency 'netaddr', '~> 1.5', '>= 1.5.1'
+  s.add_dependency 'httparty'
+  s.add_dependency 'ipaddress'
 
 end

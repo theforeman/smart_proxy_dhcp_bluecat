@@ -14,20 +14,20 @@
 #fqdn or ip of your bluecat address manager
 :host: "192.168.0.2"
 
-# id of the parentBlock that holds the subnets that you want to use
-:parentBlock: 00000
+# id of the parent_block that holds the subnets that you want to use
+:parent_block: 00000
 
 # name of your dns view
-:viewName: "internal"
+:view_name: "internal"
 
 # id of your Bluecat configuration
-:configId: 000000
+:config_id: 000000
 
 # Name of your Bluecat configuration
-:configName: "default"
+:config_name: "default"
 
 # id of the server that holds your dhcp
-:serverId: 000000
+:server_id: 000000
 
 
 # credentials of your api user

@@ -14,11 +14,11 @@ module Proxy::DHCP::BlueCat
                                     settings[:scheme],
                                     settings[:verify],
                                     settings[:host],
-                                    settings[:parentBlock],
-                                    settings[:viewName],
-                                    settings[:configName],
-                                    settings[:configId],
-                                    settings[:serverId],
+                                    settings[:parent_block],
+                                    settings[:view_name],
+                                    settings[:config_name],
+                                    settings[:config_id],
+                                    settings[:server_id],
                                     settings[:username],
                                     settings[:password])
                                   end)

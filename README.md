@@ -1,6 +1,7 @@
 # SmartProxyDhcpBlueCat
 
-This plugin adds a new DHCP provider for managing records with BlueCat Address Manager
+This plugin adds a new DHCP provider for managing records with BlueCat Address Manager.
+The Provider manages dhcp reservations and A&PTR records.
 
 ## Installation
 
@@ -11,7 +12,7 @@ This plugin is compatible with Smart Proxy 1.16 or higher.
 
 When installing using "gem", make sure to install the bundle file:
 
-    echo "gem 'smart_proxy_dhcp_bluecat', :git => 'https://github.com/m4c3/smart_proxy_dhcp_bluecat/'" > /usr/share/foreman-proxy/bundler.d/dhcp_bluecat.rb
+    echo "gem 'smart_proxy_dhcp_bluecat', :git => 'https://gitlab.sixt.de/datacenter-mgmt/smart_proxy_dhcp_bluecat'" > /usr/share/foreman-proxy/bundler.d/dhcp_bluecat.rb
 
 ## Configuration
 
@@ -25,16 +26,17 @@ Configuration options for this plugin are in `/etc/foreman-proxy/settings.d/dhcp
     :scheme: connection mode to the Bluecat address manager
     :verify: validate ssl connection
     :host: FQDN or IP of the Bluecat address manager
-    :parentBlock: parentBlock Id that holds your subnets
-    :viewName: Bluecat DNS view name
-    :configId: Bluecat configuration id
-    :configName: Bluecat configuration name
-    :serverId: id of your dhcp server
+    :parent_block: parent_block Id that holds your subnets
+    :view_name: Bluecat DNS view name
+    :config_id: Bluecat configuration id
+    :config_name: Bluecat configuration name
+    :server_id: id of your dhcp server
     :username: API Username
     :password: API Password
 
 ## Limitations
-IPv6 Records are currently not implemented
+    IPv6 Records are currently not implemented
+    Adresses with expired DHCP Leases are not handed out as free IPs by Bluecat
 
 ## Contributing
 

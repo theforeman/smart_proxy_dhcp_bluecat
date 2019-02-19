@@ -5,23 +5,24 @@ require "json"
 class BlueCat
     include ::Proxy::Log
     @@token=""
-    attr_reader :scheme, :verify, :host, :parentBlock, :viewName, :configName, :configId, :serverId, :username, :password
-    def initialize(scheme, verify, host, parentBlock, viewName, configName, configId, serverId, username, password)
+    attr_reader :scheme, :verify, :host, :parent_block, :view_name, :config_name, :config_id, :server_id, :username, :password
+    def initialize(scheme, verify, host, parent_block, view_name, config_name, config_id, server_id, username, password)
       @scheme = scheme
       @verify = verify
       @host = host
-      @parentBlock = parentBlock
-      @viewName = viewName
-      @configId = configId
-      @configName = configName
-      @serverId = serverId
+      @parent_block = parent_block
+      @view_name = view_name
+      @config_id = config_id
+      @config_name = config_name
+      @server_id = server_id
       @username = username
       @password = password
       #@@token=rest_login()
     end
 
     def rest_login()
-      logger.debug ("BAM Login " + @scheme + " " +  @host + " " + @username + " " + @password)
+      # login to bam, parse the session token
+      logger.debug ("BAM Login " + @scheme + " " +  @host + " ")
       response  = HTTParty.get("%s://%s/Services/REST/v1/login?username=%s&password=%s" % [@scheme, @host, @username, @password], {
         :verify => @verify,
         "Content-Type" => "text/plain"
@@ -37,7 +38,8 @@ class BlueCat
       @@token=token[0].to_s
     end
     def rest_logout()
-      logger.debug ("BAM Logout " +  @@token)
+      # logout from bam,
+      logger.debug ("BAM Logout ")
       response = HTTParty.get("%s://%s/Services/REST/v1/logout" % [@scheme, @host], {
         :headers => { "Authorization" => "BAMAuthToken: " + @@token, "Content-Type" => "application/json"},
         :verify => @verify
@@ -48,12 +50,14 @@ class BlueCat
     end
 
     def rest_get(endpoint, querystring)
+      # wrapper function to for rest get requests
       logger.debug ("BAM GET " + endpoint + "?" + querystring)
 
       response = HTTParty.get("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
                                 :headers => { "Authorization" => "BAMAuthToken: " + @@token, "Content-Type" => "application/json"},
                                 :verify => @verify
                            })
+      # Session propably expired, refresh it and do the request again
       if response.code == 401
         rest_login()
         response = HTTParty.get("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
@@ -70,11 +74,13 @@ class BlueCat
     end
 
     def rest_post(endpoint, querystring)
+      # wrapper function to for rest post requests
       logger.debug ("BAM POST " + endpoint + "?" + querystring)
       response = HTTParty.post("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
                                 :headers => { "Authorization" => "BAMAuthToken: " + @@token, "Content-Type" => "application/json"},
                                 :verify => @verify
                               })
+      # Session propably expired, refresh it and do the request again
       if response.code == 401
         rest_login()
         response = HTTParty.post("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
@@ -91,11 +97,13 @@ class BlueCat
     end
 
     def rest_put(endpoint, querystring)
+      # wrapper function to for rest put requests
       logger.debug ("BAM PUT " + endpoint + "?" + querystring)
       response = HTTParty.put("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
                                 :headers => { "Authorization" => "BAMAuthToken: " + @@token, "Content-Type" => "application/json"},
                                 :verify => @verify
                               })
+      # Session propably expired, refresh it and do the request again
       if response.code == 401
         rest_login()
         response = HTTParty.put("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
@@ -112,11 +120,14 @@ class BlueCat
     end
 
     def rest_delete(endpoint, querystring)
+      # wrapper function to for rest delete requests
       logger.debug ("BAM DELETE " + endpoint + "?" + querystring)
       response = HTTParty.delete("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
                                   :headers => { "Authorization" => "BAMAuthToken: " + @@token, "Content-Type" => "application/json"},
                                   :verify => @verify
                               })
+
+      # Session propably expired, refresh it and do the request again
       if response.code == 401
         rest_login()
         response = HTTParty.delete("%s://%s/Services/REST/v1/%s?%s" % [@scheme, @host, endpoint, querystring], {
@@ -133,22 +144,25 @@ class BlueCat
     end
 
     def get_addressid_by_ip(ip)
-      json = rest_get("getIP4Address", "containerId=" + @configId.to_s + "&address=" + ip )
+      # helper function to get the object id of a ip by an ip address
+      json = rest_get("getIP4Address", "containerId=" + @config_id.to_s + "&address=" + ip )
       result = JSON.parse(json)
       return nil if result.empty?
       return result['id'].to_s
     end
     def get_networkid_by_ip(ip)
+      # helper function to get the object id of a subnet by an ip address
       logger.debug ("BAM get_networkid_by_ip " + ip)
-      querystring = "containerId=" + @configId.to_s + "&type=IP4Network" + "&address=" + ip.to_s
+      querystring = "containerId=" + @config_id.to_s + "&type=IP4Network" + "&address=" + ip.to_s
       json = rest_get("getIPRangedByIP", querystring)
       result = JSON.parse(json)
       return nil if result.empty?
       return result['id'].to_s
     end
     def get_network_by_ip(ip)
+      # helper function to get the whole subnet informarions by an ip address
       logger.debug ("BAM get_network_by_ip " + ip)
-      querystring = "containerId=" + @configId.to_s + "&type=IP4Network" + "&address=" + ip.to_s
+      querystring = "containerId=" + @config_id.to_s + "&type=IP4Network" + "&address=" + ip.to_s
       json = rest_get("getIPRangedByIP", querystring)
       result = JSON.parse(json)
       properties = parse_properties(result["properties"])
@@ -156,6 +170,8 @@ class BlueCat
     end
 
     def  parse_properties(properties)
+      # helper function to parse the properties scheme of bluecat into a hash
+      # => properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character. For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
       properties = properties.split("|")
       h = Hash.new("")
       properties.each do |property|
@@ -165,11 +181,13 @@ class BlueCat
     end
 
     def add_host(options)
+      # wrapper function to add the dhcp reservation and dns records
 
-      rest_post("addDeviceInstance", "configName=" + @configName +
+      # add the ip and hostname and mac as static
+      rest_post("addDeviceInstance", "config_name=" + @config_name +
                                      "&ipAddressMode=PASS_VALUE" +
                                      "&ipEntity=" + options['ip'] +
-                                     "&viewName=" + @viewName +
+                                     "&view_name=" + @view_name +
                                      "&zoneName=" + options['hostname'].split('.', 2).last +
                                      "&deviceName=" + options['hostname'] +
                                      "&recordName=" + options['hostname'] +
@@ -180,20 +198,28 @@ class BlueCat
 
       addressId  = get_addressid_by_ip(options['ip'] )
 
+      # update the state of the ip from static to dhcp reserved
       rest_put("changeStateIP4Address", "addressId=" + addressId +
                                         "&targetState=MAKE_DHCP_RESERVED" +
                                         "&macAddress=" + options['mac']
                                         )
-      rest_post("deployServerConfig", "serverId=" + @serverId.to_s + "&properties=services=DNS,DHCP")
+      # deploy the config
+      rest_post("deployServerConfig", "server_id=" + @server_id.to_s + "&properties=services=DNS,DHCP")
       return nil
     end
 
     def remove_host(ip)
-      rest_post("deployServerConfig", "serverId=" + @serverId.to_s + "&properties=services=DHCP,DNS")
-      rest_delete("deleteDeviceInstance", "configName=" + @configName +  "&identifier=" + ip)
+      # wrapper function to remove a dhcp reservation and dns records
+      # deploy the config, without a clean config the removal fails sometimes
+      rest_post("deployServerConfig", "server_id=" + @server_id.to_s + "&properties=services=DHCP,DNS")
+      # remove the ip and depending records
+      rest_delete("deleteDeviceInstance", "config_name=" + @config_name +  "&identifier=" + ip)
+      # deploy the config again
+      rest_post("deployServerConfig", "server_id=" + @server_id.to_s + "&properties=services=DHCP,DNS")
     end
 
     def get_next_ip(netadress, start_ip, end_ip)
+      # fetches the next free address in a subnet
       networkid = get_networkid_by_ip(netadress)
 
       if start_ip.to_s.empty?
@@ -207,7 +233,8 @@ class BlueCat
     end
 
     def get_subnets()
-      json = rest_get("getEntities", "parentId=" + @parentBlock.to_s + "&type=IP4Network&start=0&count=10000")
+      # fetches all subnets under the parent_block
+      json = rest_get("getEntities", "parentId=" + @parent_block.to_s + "&type=IP4Network&start=0&count=10000")
       results = JSON.parse(json)
       subnets=[]
       results.each do |result|
@@ -220,12 +247,14 @@ class BlueCat
     end
 
     def find_mysubnet(subnet_address)
+      # fetches a subnet by its network address
       net =  IPAddress.parse(get_network_by_ip(subnet_address))
       subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
       return subnet
     end
 
     def get_hosts(network_address)
+      # fetches all dhcp reservations in a subnet
       netid = get_networkid_by_ip(network_address)
       net =  IPAddress.parse(get_network_by_ip(network_address))
       subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
@@ -261,6 +290,7 @@ class BlueCat
     end
 
     def get_hosts_by_ip(ip)
+      # fetches a host by its ip
         net =  IPAddress.parse(get_network_by_ip(ip))
         subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
         ipid = get_addressid_by_ip(ip)
@@ -287,7 +317,8 @@ class BlueCat
     end
 
     def get_host_by_mac(mac)
-      json = rest_get("getMACAddress", "configurationId=" + @configId.to_s + "&macAddress=" + mac.to_s )
+      # fetches all dhcp reservations by  a mac
+      json = rest_get("getMACAddress", "configurationId=" + @config_id.to_s + "&macAddress=" + mac.to_s )
       result = JSON.parse(json)
       macid = result["id"].to_s
       return nil if macid == "0"
