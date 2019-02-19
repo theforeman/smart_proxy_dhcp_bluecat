@@ -7,14 +7,14 @@ class SchemeValidatorTest < Test::Unit::TestCase
   end
 
   def test_should_pass_when_record_type_is_http
-    assert @validator.validate!(:scheme => 'http')
+    assert @validator.validate!(scheme: 'http')
   end
 
   def test_should_pass_when_record_type_is_https
-    assert @validator.validate!(:scheme => 'https')
+    assert @validator.validate!(scheme: 'https')
   end
 
   def test_should_raise_exception_when_record_type_is_unrecognised
-    assert_raises(::Proxy::Error::ConfigurationError) { @validator.validate!(:scheme => '') }
+    assert_raises(::Proxy::Error::ConfigurationError) { @validator.validate!(scheme: '') }
   end
 end

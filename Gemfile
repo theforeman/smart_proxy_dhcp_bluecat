@@ -9,9 +9,9 @@ group :development do
     gem 'test-unit'
   end
   gem 'mocha'
+  gem 'smart_proxy', github: 'theforeman/smart-proxy', branch: 'develop'
   gem 'webmock'
-  gem 'smart_proxy', :github => 'theforeman/smart-proxy', :branch => 'develop'
 end
 
-gem 'ipaddress'
 gem 'httparty'
+gem 'ipaddress'

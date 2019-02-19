@@ -17,4 +17,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'httparty'
   s.add_dependency 'ipaddress'
 
+  s.add_development_dependency('rubocop', '~> 0.50.0')
 end

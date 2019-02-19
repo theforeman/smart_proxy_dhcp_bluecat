@@ -7,7 +7,7 @@ require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_main'
 class BluecatProviderTest < Test::Unit::TestCase
   def setup
     @connection = Bluecat.new('10.10.10.10', 'https', true,
-                               'user', 'password')
+                              'user', 'password')
     @managed_subnets = nil
 
     @bluecat_api_response_subnet = {
@@ -19,13 +19,13 @@ class BluecatProviderTest < Test::Unit::TestCase
       'ip_address' => '192.168.42.1',
       'network' => '192.168.42.0',
       'mask_bits' => '24',
-      'hwaddress' => '32e760a64061',
+      'hwaddress' => '32e760a64061'
     }
     @subnet = Proxy::DHCP::Subnet.new('192.168.42.0', '255.255.255.0')
     @subnet2 = Proxy::DHCP::Subnet.new('192.168.42.0', '0.0.0.0')
     @provider = Proxy::DHCP::Bluecat::Provider.new(@connection, @managed_subnets)
-    @reservation = Proxy::DHCP::Reservation.new('test', '192.168.42.1', '32:e7:60:a6:40:61', @subnet, {:hostname => 'test'})
-    @reservation2 = Proxy::DHCP::Reservation.new('test', '192.168.42.1', '32:e7:60:a6:40:61', @subnet2, {:hostname => 'test'})
+    @reservation = Proxy::DHCP::Reservation.new('test', '192.168.42.1', '32:e7:60:a6:40:61', @subnet, hostname: 'test')
+    @reservation2 = Proxy::DHCP::Reservation.new('test', '192.168.42.1', '32:e7:60:a6:40:61', @subnet2, hostname: 'test')
   end
 
   def test_cidr_to_ip_mask
@@ -37,27 +37,27 @@ class BluecatProviderTest < Test::Unit::TestCase
   end
 
   def test_build_reservation_without_name
-    record = @record.select{|x| x != 'name'}
+    record = @record.reject { |x| x == 'name' }
     assert_equal nil, @provider.build_reservation(record)
   end
 
   def test_build_reservation_without_ip
-    record = @record.select{|x| x != 'ip_address'}
+    record = @record.reject { |x| x == 'ip_address' }
     assert_raises(Proxy::Validations::Error) { @provider.build_reservation(record) }
   end
 
   def test_build_reservation_without_network
-    record = @record.select{|x| x != 'network'}
+    record = @record.reject { |x| x == 'network' }
     assert_raises(Proxy::Validations::Error) { @provider.build_reservation(record) }
   end
 
   def test_build_reservation_without_mask
-    record = @record.select{|x| x != 'mask_bits'}
+    record = @record.reject { |x| x == 'mask_bits' }
     assert_equal @reservation2, @provider.build_reservation(record)
   end
 
   def test_build_reservation_without_hwaddress
-    record = @record.select{|x| x != 'hwaddress'}
+    record = @record.reject { |x| x == 'hwaddress' }
     assert_equal nil, @provider.build_reservation(record)
   end
 
@@ -81,7 +81,7 @@ class BluecatProviderTest < Test::Unit::TestCase
   end
 
   def test_unused_ip
-    ip = {'ip_address' => '192.168.42.1'}
+    ip = { 'ip_address' => '192.168.42.1' }
     @connection.expects(:get_next_ip).returns(ip)
     assert_equal ip, @provider.unused_ip(nil, nil, nil, nil)
   end
@@ -115,5 +115,4 @@ class BluecatProviderTest < Test::Unit::TestCase
     @connection.expects(:remove_host).returns(nil)
     assert_equal nil, @provider.del_record(@reservation)
   end
-
 end
