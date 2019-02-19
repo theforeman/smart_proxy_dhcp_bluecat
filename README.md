@@ -33,6 +33,8 @@ Configuration options for this plugin are in `/etc/foreman-proxy/settings.d/dhcp
     :username: API Username
     :password: API Password
 
+## Limitations
+IPv6 Records are currently not implemented
 
 ## Contributing
 
