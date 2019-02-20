@@ -22,44 +22,48 @@ class BlueCat
 
   def rest_login
     # login to bam, parse the session token
-    logger.debug ('BAM Login ' + @scheme + ' ' + @host + ' ')
-    response = HTTParty.get(format('%s://%s/Services/REST/v1/login?username=%s&password=%s', @scheme, @host, @username, @password), :verify => @verify,
-                                                                                                                                    'Content-Type' => 'text/plain')
+    logger.debug('BAM Login ' + @scheme + ' ' + @host + ' ')
+    response = HTTParty.get(format('%s://%s/Services/REST/v1/login?username=%s&password=%s', @scheme, @host, @username, @password),
+                            headers: { 'Content-Type' => 'text/plain' },
+                            verify => @verify)
     if response.code != 200
-      logger.error ('BAM Login Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
+      logger.error('BAM Login Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
     end
     body = response.body.to_s
     token = body.match(/BAMAuthToken:\s+(\S+)/).captures
 
-    logger.debug ('BAM Login Body ' + response.body)
-    logger.debug ('BAM Login Token ' + token[0].to_s)
+    logger.debug('BAM Login Body ' + response.body)
+    logger.debug('BAM Login Token ' + token[0].to_s)
     @@token = token[0].to_s
   end
 
   def rest_logout
     # logout from bam,
-    logger.debug 'BAM Logout '
-    response = HTTParty.get(format('%s://%s/Services/REST/v1/logout', @scheme, @host), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                       verify: @verify)
+    logger.debug('BAM Logout ')
+    response = HTTParty.get(format('%s://%s/Services/REST/v1/logout', @scheme, @host),
+                            headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                            verify: @verify)
     if response.code != 200
-      logger.error ('BAM Logout Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
+      logger.error('BAM Logout Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
     end
   end
 
   def rest_get(endpoint, querystring)
     # wrapper function to for rest get requests
-    logger.debug ('BAM GET ' + endpoint + '?' + querystring)
+    logger.debug('BAM GET ' + endpoint + '?' + querystring)
 
-    response = HTTParty.get(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                             verify: @verify)
+    response = HTTParty.get(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                              headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                              verify: @verify)
     # Session propably expired, refresh it and do the request again
     if response.code == 401
       rest_login
-      response = HTTParty.get(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                               verify: @verify)
+      response = HTTParty.get(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                                headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                                verify: @verify)
     end
     if response.code != 200
-      logger.error ('BAM GET Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
+      logger.error('BAM GET Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
       return nil
     else
       return response.body
@@ -68,17 +72,20 @@ class BlueCat
 
   def rest_post(endpoint, querystring)
     # wrapper function to for rest post requests
-    logger.debug ('BAM POST ' + endpoint + '?' + querystring)
-    response = HTTParty.post(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                              verify: @verify)
+    logger.debug('BAM POST ' + endpoint + '?' + querystring)
+    response = HTTParty.post(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                              headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                              verify: @verify
+                            )
     # Session propably expired, refresh it and do the request again
     if response.code == 401
       rest_login
-      response = HTTParty.post(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                                verify: @verify)
+      response = HTTParty.post(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                               headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                               verify: @verify)
     end
     if response.code != 200
-      logger.error ('BAM POST Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
+      logger.error('BAM POST Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
       return nil
     else
       return response.body
@@ -87,17 +94,19 @@ class BlueCat
 
   def rest_put(endpoint, querystring)
     # wrapper function to for rest put requests
-    logger.debug ('BAM PUT ' + endpoint + '?' + querystring)
-    response = HTTParty.put(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                             verify: @verify)
+    logger.debug('BAM PUT ' + endpoint + '?' + querystring)
+    response = HTTParty.put(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                            headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                            verify: @verify)
     # Session propably expired, refresh it and do the request again
     if response.code == 401
       rest_login
-      response = HTTParty.put(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                               verify: @verify)
+      response = HTTParty.put(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                              headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                              verify: @verify)
     end
     if response.code != 200
-      logger.error ('BAM PUT Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
+      logger.error('BAM PUT Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
       return nil
     else
       return response.body
@@ -106,18 +115,20 @@ class BlueCat
 
   def rest_delete(endpoint, querystring)
     # wrapper function to for rest delete requests
-    logger.debug ('BAM DELETE ' + endpoint + '?' + querystring)
-    response = HTTParty.delete(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                                verify: @verify)
+    logger.debug('BAM DELETE ' + endpoint + '?' + querystring)
+    response = HTTParty.delete(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                               headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                               verify: @verify)
 
     # Session propably expired, refresh it and do the request again
     if response.code == 401
       rest_login
-      response = HTTParty.delete(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring), headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
-                                                                                                                  verify: @verify)
+      response = HTTParty.delete(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
+                                 headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
+                                 verify: @verify)
     end
     if response.code != 200
-      logger.error ('BAM DELETE Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
+      logger.error('BAM DELETE Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
       return nil
     else
       return response.body
@@ -134,7 +145,7 @@ class BlueCat
 
   def get_networkid_by_ip(ip)
     # helper function to get the object id of a subnet by an ip address
-    logger.debug ('BAM get_networkid_by_ip ' + ip)
+    logger.debug('BAM get_networkid_by_ip ' + ip)
     querystring = 'containerId=' + @config_id.to_s + '&type=IP4Network' + '&address=' + ip.to_s
     json = rest_get('getIPRangedByIP', querystring)
     result = JSON.parse(json)
@@ -144,7 +155,7 @@ class BlueCat
 
   def get_network_by_ip(ip)
     # helper function to get the whole subnet informarions by an ip address
-    logger.debug ('BAM get_network_by_ip ' + ip)
+    logger.debug('BAM get_network_by_ip ' + ip)
     querystring = 'containerId=' + @config_id.to_s + '&type=IP4Network' + '&address=' + ip.to_s
     json = rest_get('getIPRangedByIP', querystring)
     result = JSON.parse(json)
@@ -154,7 +165,8 @@ class BlueCat
 
   def  parse_properties(properties)
     # helper function to parse the properties scheme of bluecat into a hash
-    # => properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character. For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
+    # => properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character.
+    # For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
     properties = properties.split('|')
     h = Hash.new('')
     properties.each do |property|
@@ -178,10 +190,10 @@ class BlueCat
                                    '&macEntity=' + options['mac'] +
                                    '&options=AllowDuplicateHosts=true|')
 
-    addressId = get_addressid_by_ip(options['ip'])
+    address_id = get_addressid_by_ip(options['ip'])
 
     # update the state of the ip from static to dhcp reserved
-    rest_put('changeStateIP4Address', 'addressId=' + addressId +
+    rest_put('changeStateIP4Address', 'addressId=' + address_id +
                                       '&targetState=MAKE_DHCP_RESERVED' \
                                       '&macAddress=' + options['mac'])
     # deploy the config
@@ -284,9 +296,9 @@ class BlueCat
       json2 = rest_get('getEntityById', 'id=' + ipid)
       result2 = JSON.parse(json2)
       properties2 = parse_properties(result2['properties'])
-      macAddress = properties2['macAddress'].tr('-', ':')
+      mac_address = properties2['macAddress'].tr('-', ':')
       unless macAddress.empty?
-        hosts.push(Proxy::DHCP::Reservation.new(properties['absoluteName'], ip, macAddress, subnet, opts))
+        hosts.push(Proxy::DHCP::Reservation.new(properties['absoluteName'], ip, mac_address, subnet, opts))
       end
     end
     hosts.compact

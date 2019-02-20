@@ -12,11 +12,11 @@ module Proxy::DHCP::BlueCat
     load_validators scheme_validator: ::Proxy::DHCP::BlueCat::SchemeValidator,
                     verify_validator: ::Proxy::DHCP::BlueCat::VerifyValidator,
                     host_validator: ::Proxy::DHCP::BlueCat::HostValidator,
-                    parent_block_validator: ::Proxy::DHCP::BlueCat.parent_blockValidator,
-                    view_name_validator: ::Proxy::DHCP::BlueCat.view_nameValidator,
-                    config_id_validator: ::Proxy::DHCP::BlueCat.config_idValidator,
-                    config_name_validator: ::Proxy::DHCP::BlueCat.config_nameValidator,
-                    server_id_validator: ::Proxy::DHCP::BlueCat.server_idValidator,
+                    parent_block_validator: ::Proxy::DHCP::BlueCat.ParentBlockValidator,
+                    view_name_validator: ::Proxy::DHCP::BlueCat.ViewNameValidator,
+                    config_id_validator: ::Proxy::DHCP::BlueCat.ConfigIdValidator,
+                    config_name_validator: ::Proxy::DHCP::BlueCat.ConfigNameValidator,
+                    server_id_validator: ::Proxy::DHCP::BlueCat.ServerIdValidator,
                     username_validator: ::Proxy::DHCP::BlueCat::UsernameValidator,
                     password_validator: ::Proxy::DHCP::BlueCat::PasswordValidator
 

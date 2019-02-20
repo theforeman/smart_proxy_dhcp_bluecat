@@ -17,31 +17,31 @@ module ::Proxy::DHCP::BlueCat
       raise ::Proxy::Error::ConfigurationError, "Setting 'scheme' can be set to either 'http' or 'https'"
     end
   end
-  class parent_blockValidator < ::Proxy::PluginValidators::Base
+  class ParentBlockValidator < ::Proxy::PluginValidators::Base
     def validate!(settings)
       return true if settings[:parent_block].is_a?(Integer)
       raise ::Proxy::Error::ConfigurationError, "Setting 'parent_block' must be (integer)"
     end
   end
-  class view_nameValidator < ::Proxy::PluginValidators::Base
+  class ViewNameValidator < ::Proxy::PluginValidators::Base
     def validate!(settings)
       return true if settings[:view_name].is_a?(String)
       raise ::Proxy::Error::ConfigurationError, "Setting 'view_name' must be (string)"
     end
   end
-  class config_idValidator < ::Proxy::PluginValidators::Base
+  class ConfigIdValidator < ::Proxy::PluginValidators::Base
     def validate!(settings)
       return true if settings[:config_id].is_a?(Integer)
       raise ::Proxy::Error::ConfigurationError, "Setting 'parent_block' must be (integer)"
     end
   end
-  class config_nameValidator < ::Proxy::PluginValidators::Base
+  class ConfigNameValidator < ::Proxy::PluginValidators::Base
     def validate!(settings)
       return true if settings[:config_name].is_a?(String)
       raise ::Proxy::Error::ConfigurationError, "Setting 'config_name' must be (string)"
     end
   end
-  class server_idValidator < ::Proxy::PluginValidators::Base
+  class ServerIdValidator < ::Proxy::PluginValidators::Base
     def validate!(settings)
       return true if settings[:server_id].is_a?(Integer)
       raise ::Proxy::Error::ConfigurationError, "Setting 'server_id' must be (integer)"

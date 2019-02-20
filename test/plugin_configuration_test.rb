@@ -8,11 +8,14 @@ require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_plugin'
 require 'smart_proxy_dhcp_bluecat/bluecat_api'
 require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_main'
 
-class bluecatDhcpProductionWiringTest < Test::Unit::TestCase
+class BluecatDhcpProductionWiringTest < Test::Unit::TestCase
   def setup
-    @settings = {:username => 'user', :password => 'password',
-                 :server => '10.10.10.10', :scheme => 'https',
-                 :verify => true, :subnets => ['1.1.1.0/255.255.255.0']}
+    @settings = { :username => 'user',
+                  :password => 'password',
+                  :server => '10.10.10.10',
+                  :scheme => 'https',
+                  :verify => true,
+                  :subnets => ['1.1.1.0/255.255.255.0'] }
     @container = ::Proxy::DependencyInjection::Container.new
     Proxy::DHCP::Bluecat::PluginConfiguration.new.load_dependency_injection_wirings(@container, @settings)
   end
@@ -30,5 +33,4 @@ class bluecatDhcpProductionWiringTest < Test::Unit::TestCase
     provider = @container.get_dependency(:dhcp_provider)
     assert provider.instance_of?(::Proxy::DHCP::Bluecat::Provider)
   end
-
 end

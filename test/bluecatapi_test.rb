@@ -101,7 +101,10 @@ class BluecatApiTest < Test::Unit::TestCase
 
   def test_get_next_ip
     @connection.expects(:get_subnet).returns(@array_subnet)
-    req = stub_request(:get, format('%s://%s/api/1.0/suggest_ip/?end_range=10.75.1.21&start_range=10.75.1.20&subnet_id=1', @connection.scheme, @connection.host)).to_return(status: 200, body: @ip_suggest_output)
+    req = stub_request(:get,
+                       format('%s://%s/api/1.0/suggest_ip/?end_range=10.75.1.21&start_range=10.75.1.20&subnet_id=1',
+                       @connection.scheme,
+                       @connection.host)).to_return(status: 200, body: @ip_suggest_output)
     assert_equal '10.75.1.20', @connection.get_next_ip('10.75.1.0', '10.75.1.20', '10.75.1.21')
     assert_requested req
   end
