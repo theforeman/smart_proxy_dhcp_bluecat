@@ -1,5 +1,5 @@
 require 'test_helper'
-require 'smart_proxy_dhcp_bluecat/scheme_validator'
+require 'smart_proxy_dhcp_bluecat/settings_validator'
 
 class SchemeValidatorTest < Test::Unit::TestCase
   def setup
