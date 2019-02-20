@@ -12,7 +12,7 @@ This plugin is compatible with Smart Proxy 1.16 or higher.
 
 When installing using "gem", make sure to install the bundle file:
 
-    echo "gem 'smart_proxy_dhcp_bluecat', :git => 'https://gitlab.sixt.de/datacenter-mgmt/smart_proxy_dhcp_bluecat'" > /usr/share/foreman-proxy/bundler.d/dhcp_bluecat.rb
+    echo "gem 'smart_proxy_dhcp_bluecat', :git => 'https://github.com/theforeman/smart_proxy_dhcp_bluecat'" > /usr/share/foreman-proxy/bundler.d/dhcp_bluecat.rb
 
 ## Configuration
 
