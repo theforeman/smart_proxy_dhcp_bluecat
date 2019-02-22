@@ -286,8 +286,8 @@ class BlueCat
     return nil if ipid.to_s == '0'
     json = rest_get('getLinkedEntities', 'entityId=' + ipid + '&type=HostRecord&start=0&count=2')
     results = JSON.parse(json)
+    hosts = []
     if results.empty?
-      hosts = []
       results.each do |result|
         properties = parse_properties(result['properties'])
         opts = { hostname: properties['absoluteName'] }
