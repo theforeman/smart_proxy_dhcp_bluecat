@@ -286,6 +286,7 @@ class BlueCat
     return nil if ipid.to_s == '0'
     json = rest_get('getLinkedEntities', 'entityId=' + ipid + '&type=HostRecord&start=0&count=2')
     results = JSON.parse(json)
+    logger.debug(results.to_s)
     hosts = []
     if results.empty?
       results.each do |result|
