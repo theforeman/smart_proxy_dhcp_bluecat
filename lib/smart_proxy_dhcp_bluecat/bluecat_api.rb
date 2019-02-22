@@ -307,7 +307,7 @@ class BlueCat
         result2 = JSON.parse(json2)
         properties2 = parse_properties(result2['properties'])
         mac_address = properties2['macAddress'].tr('-', ':')
-        unless macAddress.empty?
+        unless mac_address.empty?
           hosts.push(Proxy::DHCP::Reservation.new(properties['absoluteName'], ip, mac_address, subnet, opts))
         end
       end
