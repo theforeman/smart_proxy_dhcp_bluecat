@@ -179,10 +179,10 @@ class BlueCat
     # wrapper function to add the dhcp reservation and dns records
 
     # add the ip and hostname and mac as static
-    rest_post('addDeviceInstance', 'config_name=' + @config_name +
+    rest_post('addDeviceInstance', 'configName=' + @config_name +
                                    '&ipAddressMode=PASS_VALUE' \
                                    '&ipEntity=' + options['ip'] +
-                                   '&view_name=' + @view_name +
+                                   '&viewName=' + @view_name +
                                    '&zoneName=' + options['hostname'].split('.', 2).last +
                                    '&deviceName=' + options['hostname'] +
                                    '&recordName=' + options['hostname'] +
@@ -197,18 +197,18 @@ class BlueCat
                                       '&targetState=MAKE_DHCP_RESERVED' \
                                       '&macAddress=' + options['mac'])
     # deploy the config
-    rest_post('deployServerConfig', 'server_id=' + @server_id.to_s + '&properties=services=DNS,DHCP')
+    rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DNS,DHCP')
     nil
   end
 
   def remove_host(ip)
     # wrapper function to remove a dhcp reservation and dns records
     # deploy the config, without a clean config the removal fails sometimes
-    rest_post('deployServerConfig', 'server_id=' + @server_id.to_s + '&properties=services=DHCP,DNS')
+    rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
     # remove the ip and depending records
-    rest_delete('deleteDeviceInstance', 'config_name=' + @config_name + '&identifier=' + ip)
+    rest_delete('deleteDeviceInstance', 'configName=' + @config_name + '&identifier=' + ip)
     # deploy the config again
-    rest_post('deployServerConfig', 'server_id=' + @server_id.to_s + '&properties=services=DHCP,DNS')
+    rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
   end
 
   def get_next_ip(netadress, start_ip, _end_ip)
