@@ -302,6 +302,10 @@ class BlueCat
         end
       end
     else
+      json2 = rest_get('getIP4Address', 'containerId=' + @config_id.to_s + '&address=' + ip)
+      result2 = JSON.parse(json2)
+      properties2 = parse_properties(result2['properties'])
+      mac_address = properties2['macAddress'].tr('-', ':')
       hosts.push(Proxy::DHCP::Reservation.new("", ip, mac_address, subnet, opts))
     end
     hosts.compact
