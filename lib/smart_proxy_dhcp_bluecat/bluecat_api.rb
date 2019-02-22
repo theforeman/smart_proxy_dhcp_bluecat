@@ -286,26 +286,29 @@ class BlueCat
     return nil if ipid.to_s == '0'
     json = rest_get('getLinkedEntities', 'entityId=' + ipid + '&type=HostRecord&start=0&count=2')
     results = JSON.parse(json)
-    return nil if results.empty?
-    hosts = []
-    results.each do |result|
-      properties = parse_properties(result['properties'])
-      opts = { hostname: properties['absoluteName'] }
+    if results.empty?
+      hosts = []
+      results.each do |result|
+        properties = parse_properties(result['properties'])
+        opts = { hostname: properties['absoluteName'] }
 
-      next unless properties['reverseRecord'].to_s == 'true'.to_s
-      json2 = rest_get('getEntityById', 'id=' + ipid)
-      result2 = JSON.parse(json2)
-      properties2 = parse_properties(result2['properties'])
-      mac_address = properties2['macAddress'].tr('-', ':')
-      unless macAddress.empty?
-        hosts.push(Proxy::DHCP::Reservation.new(properties['absoluteName'], ip, mac_address, subnet, opts))
+        next unless properties['reverseRecord'].to_s == 'true'.to_s
+        json2 = rest_get('getEntityById', 'id=' + ipid)
+        result2 = JSON.parse(json2)
+        properties2 = parse_properties(result2['properties'])
+        mac_address = properties2['macAddress'].tr('-', ':')
+        unless macAddress.empty?
+          hosts.push(Proxy::DHCP::Reservation.new(properties['absoluteName'], ip, mac_address, subnet, opts))
+        end
       end
+    else
+      hosts.push(Proxy::DHCP::Reservation.new("", ip, mac_address, subnet, opts))
     end
     hosts.compact
   end
 
   def get_host_by_mac(mac)
-    # fetches all dhcp reservations by  a mac
+    # fetches all dhcp reservations by a mac
     json = rest_get('getMACAddress', 'configurationId=' + @config_id.to_s + '&macAddress=' + mac.to_s)
     result = JSON.parse(json)
     macid = result['id'].to_s
