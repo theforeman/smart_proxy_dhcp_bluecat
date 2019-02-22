@@ -287,7 +287,6 @@ class BlueCat
     return nil if ipid.to_s == '0'
     json = rest_get('getLinkedEntities', 'entityId=' + ipid + '&type=HostRecord&start=0&count=2')
     results = JSON.parse(json)
-    logger.debug(results.to_s)
 
     if results.empty?
       # no host record on ip, fetch mac only
