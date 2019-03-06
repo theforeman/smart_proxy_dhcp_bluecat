@@ -198,6 +198,8 @@ class BlueCat
                                       '&macAddress=' + options['mac'])
     # deploy the config
     rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP')
+    # lets wait a little bit for the complete dhcp deploy
+    sleep 3
     rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DNS')
     nil
   end
