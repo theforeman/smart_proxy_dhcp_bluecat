@@ -197,7 +197,8 @@ class BlueCat
                                       '&targetState=MAKE_DHCP_RESERVED' \
                                       '&macAddress=' + options['mac'])
     # deploy the config
-    rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DNS,DHCP')
+    rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP')
+    rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DNS')
     nil
   end
 
