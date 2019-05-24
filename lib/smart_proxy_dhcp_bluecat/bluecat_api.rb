@@ -188,7 +188,7 @@ class BlueCat
                                    '&recordName=' + options['hostname'] +
                                    '&macAddressMode=PASS_VALUE' \
                                    '&macEntity=' + options['mac'] +
-                                   '&options=AllowDuplicateHosts=true|')
+                                   '&options=AllowDuplicateHosts=true%7C')
 
     address_id = get_addressid_by_ip(options['ip'])
 
@@ -220,7 +220,7 @@ class BlueCat
 
     start_ip = IPAddress.parse(netadress).first if start_ip.to_s.empty?
 
-    properties = 'offset=' + start_ip.to_s + '|excludeDHCPRange=false'
+    properties = 'offset=' + start_ip.to_s + '%7CexcludeDHCPRange=false'
     result = rest_get('getNextIP4Address', 'parentId=' + networkid.to_s + '&properties=' + properties)
     return nil if result.empty?
     result.tr('"', '')
