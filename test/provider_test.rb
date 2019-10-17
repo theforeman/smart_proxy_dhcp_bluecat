@@ -66,12 +66,12 @@ class BluecatProviderTest < Test::Unit::TestCase
   end
 
   def test_subnets
-    @connection.expects(:get_subnets).returns([@bluecat_api_response_subnet])
+    @connection.expects(:subnets).returns([@bluecat_api_response_subnet])
     assert_equal [@subnet], @provider.subnets
   end
 
   def test_subnets_empty
-    @connection.expects(:get_subnets).returns([])
+    @connection.expects(:subnets).returns([])
     assert_equal [], @provider.subnets
   end
 

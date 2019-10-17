@@ -8,6 +8,7 @@ Gemfile.lock
 .ruby-*
 tags
 .bundle/
+.local/
 vendor/
 config/*.yml
 .remote-sync.json
