@@ -8,7 +8,7 @@ require 'smart_proxy_dhcp_bluecat/bluecat_api'
 
 class BluecatApiTest < Test::Unit::TestCase
   def setup
-    @connection = BlueCat::Client.new(scheme: 'https', verify: true, host: 'bam.example.com', parent_block: 123456, view_name: 'default', config_name: 'default',  config_id: 123456, server_id: 123456, username: 'admin', password: 'admin')
+    @connection = BlueCat.new(scheme: 'https', verify: true, host: 'bam.example.com', parent_block: 123456, view_name: 'default', config_name: 'default',  config_id: 123456, server_id: 123456, username: 'admin', password: 'admin')
   end
 
   def test_get_subnets
