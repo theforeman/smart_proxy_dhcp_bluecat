@@ -2,7 +2,7 @@ require 'httparty'
 require 'ipaddress'
 require 'json'
 
-class BlueCat::Client
+class BlueCat
   include ::Proxy::Log
 
   @@token = ''
