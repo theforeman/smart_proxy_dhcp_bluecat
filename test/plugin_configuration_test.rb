@@ -7,7 +7,9 @@ require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_plugin'
 require 'smart_proxy_dhcp_bluecat/bluecat_api'
 require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_main'
 
-class BluecatDhcpProductionWiringTest < Test::Unit::TestCase
+
+=begin
+class BlueCatDhcpProductionWiringTest < Test::Unit::TestCase
   def setup
     @settings = { :scheme => 'https',
                   :verify => true,
@@ -43,3 +45,4 @@ class BluecatDhcpProductionWiringTest < Test::Unit::TestCase
     assert provider.instance_of?(::Proxy::DHCP::BlueCat::Provider)
   end
 end
+=end
