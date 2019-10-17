@@ -11,7 +11,7 @@ class BlueCat
     attr_accessor :token
   end
 
-  def initialize(scheme, verify, host, parent_block, view_name, config_name, config_id, server_id, username, password)
+  def initialize(scheme:, verify:, host:, parent_block:, view_name:, config_name:, config_id:, server_id:, username:, password:)
     @scheme = scheme
     @verify = verify
     @host = host
