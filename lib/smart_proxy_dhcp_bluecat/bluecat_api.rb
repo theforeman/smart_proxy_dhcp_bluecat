@@ -2,7 +2,7 @@ require 'httparty'
 require 'ipaddress'
 require 'json'
 
-class BlueCat
+class BlueCat::Client
   include ::Proxy::Log
 
   @@token = ''
@@ -15,8 +15,8 @@ class BlueCat
     @host = host
     @parent_block = parent_block
     @view_name = view_name
-    @config_id = config_id
     @config_name = config_name
+    @config_id = config_id
     @server_id = server_id
     @username = username
     @password = password
