@@ -3,7 +3,7 @@ require 'smart_proxy_dhcp_bluecat/settings_validator'
 
 class SchemeValidatorTest < Test::Unit::TestCase
   def setup
-    @validator = ::Proxy::DHCP::Bluecat::SchemeValidator.new(:dhcp_bluecat, :scheme, nil, nil)
+    @validator = ::Proxy::DHCP::BlueCat::SchemeValidator.new(:dhcp_bluecat, :scheme, nil, nil)
   end
 
   def test_should_pass_when_record_type_is_http
@@ -21,7 +21,7 @@ end
 
 class VerifyValidatorTest < Test::Unit::TestCase
   def setup
-    @validator = ::Proxy::DHCP::Bluecat::VerifyValidator.new(:dhcp_bluecat, :verify, nil, nil)
+    @validator = ::Proxy::DHCP::BlueCat::VerifyValidator.new(:dhcp_bluecat, :verify, nil, nil)
   end
 
   def test_should_pass_when_record_type_is_true

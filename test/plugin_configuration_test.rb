@@ -21,7 +21,7 @@ class BluecatDhcpProductionWiringTest < Test::Unit::TestCase
                   :password => 'password' }
 
     @container = ::Proxy::DependencyInjection::Container.new
-    Proxy::DHCP::Bluecat::PluginConfiguration.new.load_dependency_injection_wirings(@container, @settings)
+    Proxy::DHCP::BlueCat::PluginConfiguration.new.load_dependency_injection_wirings(@container, @settings)
   end
 
   def test_connection_initialization
@@ -40,6 +40,6 @@ class BluecatDhcpProductionWiringTest < Test::Unit::TestCase
 
   def test_provider
     provider = @container.get_dependency(:dhcp_provider)
-    assert provider.instance_of?(::Proxy::DHCP::Bluecat::Provider)
+    assert provider.instance_of?(::Proxy::DHCP::BlueCat::Provider)
   end
 end

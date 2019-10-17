@@ -23,7 +23,7 @@ class BluecatProviderTest < Test::Unit::TestCase
     }
     @subnet = Proxy::DHCP::Subnet.new('192.168.42.0', '255.255.255.0')
     @subnet2 = Proxy::DHCP::Subnet.new('192.168.42.0', '0.0.0.0')
-    @provider = Proxy::DHCP::Bluecat::Provider.new(@connection, @managed_subnets)
+    @provider = Proxy::DHCP::BlueCat::Provider.new(@connection, @managed_subnets)
     @reservation = Proxy::DHCP::Reservation.new('test', '192.168.42.1', '32:e7:60:a6:40:61', @subnet, hostname: 'test')
     @reservation2 = Proxy::DHCP::Reservation.new('test', '192.168.42.1', '32:e7:60:a6:40:61', @subnet2, hostname: 'test')
   end
@@ -66,12 +66,12 @@ class BluecatProviderTest < Test::Unit::TestCase
   end
 
   def test_subnets
-    @connection.expects(:get_subnets).returns([@bluecat_api_response_subnet])
+    @connection.expects(:subnets).returns([@bluecat_api_response_subnet])
     assert_equal [@subnet], @provider.subnets
   end
 
   def test_subnets_empty
-    @connection.expects(:get_subnets).returns([])
+    @connection.expects(:subnets).returns([])
     assert_equal [], @provider.subnets
   end
 
