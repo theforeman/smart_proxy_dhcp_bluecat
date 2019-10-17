@@ -4,8 +4,11 @@ require 'json'
 
 class BlueCat
   include ::Proxy::Log
+
   @@token = ''
+
   attr_reader :scheme, :verify, :host, :parent_block, :view_name, :config_name, :config_id, :server_id, :username, :password
+
   def initialize(scheme, verify, host, parent_block, view_name, config_name, config_id, server_id, username, password)
     @scheme = scheme
     @verify = verify
@@ -17,7 +20,6 @@ class BlueCat
     @server_id = server_id
     @username = username
     @password = password
-    # @@token=rest_login()
   end
 
   def rest_login
@@ -62,12 +64,13 @@ class BlueCat
                                 headers: { 'Authorization' => 'BAMAuthToken: ' + @@token, 'Content-Type' => 'application/json' },
                                 verify: @verify)
     end
+
     if response.code != 200
       logger.error('BAM GET Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
       return nil
-    else
-      return response.body
     end
+
+    response.body
   end
 
   def rest_post(endpoint, querystring)
@@ -163,18 +166,19 @@ class BlueCat
     properties['CIDR'].to_s
   end
 
-  def  parse_properties(properties)
+  def parse_properties(properties)
     # helper function to parse the properties scheme of bluecat into a hash
     # => properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character.
     # For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
     properties = properties.split('|')
-    h = Hash.new('')
+    h = {}
     properties.each do |property|
       h[property.split('=').first.to_s] = property.split('=').last.to_s
     end
     h
   end
 
+  # public
   def add_host(options)
     # wrapper function to add the dhcp reservation and dns records
 
@@ -204,6 +208,7 @@ class BlueCat
     nil
   end
 
+  # public
   def remove_host(ip)
     # wrapper function to remove a dhcp reservation and dns records
     # deploy the config, without a clean config the removal fails sometimes
@@ -214,6 +219,7 @@ class BlueCat
     rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
   end
 
+  # public
   def get_next_ip(netadress, start_ip, _end_ip)
     # fetches the next free address in a subnet
     networkid = get_networkid_by_ip(netadress)
@@ -222,31 +228,34 @@ class BlueCat
 
     properties = 'offset=' + start_ip.to_s + '%7CexcludeDHCPRange=false'
     result = rest_get('getNextIP4Address', 'parentId=' + networkid.to_s + '&properties=' + properties)
-    return nil if result.empty?
+    return if result.empty?
     result.tr('"', '')
   end
 
+  # public
   def get_subnets
     # fetches all subnets under the parent_block
     json = rest_get('getEntities', 'parentId=' + @parent_block.to_s + '&type=IP4Network&start=0&count=10000')
     results = JSON.parse(json)
     subnets = []
-    results.each do |result|
+    subnets = results.map do |result|
       properties = parse_properties(result['properties'])
       net = IPAddress.parse(properties['CIDR'])
       opts = { routers: [properties['gateway']] }
-      subnets.push(::Proxy::DHCP::Subnet.new(net.address, net.netmask, opts))
+      ::Proxy::DHCP::Subnet.new(net.address, net.netmask, opts)
     end
     subnets.compact
   end
 
+  # public
   def find_mysubnet(subnet_address)
     # fetches a subnet by its network address
-    net =  IPAddress.parse(get_network_by_ip(subnet_address))
+    net = IPAddress.parse(get_network_by_ip(subnet_address))
     subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
     subnet
   end
 
+  # public
   def get_hosts(network_address)
     # fetches all dhcp reservations in a subnet
     netid = get_networkid_by_ip(network_address)
@@ -281,6 +290,7 @@ class BlueCat
     hosts.compact
   end
 
+  # public
   def get_hosts_by_ip(ip)
     # fetches a host by its ip
     hosts = []
@@ -317,18 +327,19 @@ class BlueCat
     hosts.compact
   end
 
+  # public
   def get_host_by_mac(mac)
     # fetches all dhcp reservations by a mac
     json = rest_get('getMACAddress', 'configurationId=' + @config_id.to_s + '&macAddress=' + mac.to_s)
     result = JSON.parse(json)
     macid = result['id'].to_s
-    return nil if macid == '0'
+    return if macid == '0'
     json2 = rest_get('getLinkedEntities', 'entityId=' + macid + '&type=IP4Address&start=0&count=1')
     result2 = JSON.parse(json2)
-    return nil if result2.empty?
+    return if result2.empty?
     properties = parse_properties(result2[0]['properties'])
     host = get_hosts_by_ip(properties['address'])
-    return nil if host.nil?
+    return if host.nil?
     host[0]
   end
 end
