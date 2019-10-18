@@ -92,4 +92,31 @@ class BluecatApiTest < Test::Unit::TestCase
 
     assert_equal expected, @connection.get_next_ip(netadress: '10.100.36.0', start_ip: '10.100.36.10', end_ip: '10.100.36.30')
   end
+
+  def test_find_mysubnet
+    fixture_response_login = fixture('test_rest_login.txt')
+
+    stub_request(:get, 'https://bam.example.com/Services/REST/v1/login?password=admin&username=admin').
+      with(
+        headers: {
+          'Content-Type' => 'text/plain'
+        }
+      ).
+      to_return(status: 200, body: fixture_response_login)
+
+    fixture_response = fixture('test_find_mysubnet-getIPRangedByIP.json')
+
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getIPRangedByIP?address=10.100.36.0&containerId=123456&type=IP4Network").
+      with(
+        headers: {
+          'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+          'Content-Type' => 'application/json'
+        }
+      ).
+      to_return(status: 200, body: fixture_response)
+
+    expected = ::Proxy::DHCP::Subnet.new('10.100.36.0', '255.255.255.192')
+
+    assert_equal expected, @connection.find_mysubnet(subnet_address: '10.100.36.0')
+  end
 end

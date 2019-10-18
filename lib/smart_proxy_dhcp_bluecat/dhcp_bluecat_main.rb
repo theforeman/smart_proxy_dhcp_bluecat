@@ -78,7 +78,7 @@ module Proxy
 
         def find_subnet(subnet_address)
           logger.debug('START find_subnet with subnet_address: ' + subnet_address.to_s)
-          net = @connection.find_mysubnet(subnet_address)
+          net = @connection.find_mysubnet(subnet_address: subnet_address)
           logger.debug('END find_subnet with subnet_address: ' + subnet_address.to_s)
           logger.debug('Returned: ' + net.class.to_s + ': ' + net.to_s)
           net

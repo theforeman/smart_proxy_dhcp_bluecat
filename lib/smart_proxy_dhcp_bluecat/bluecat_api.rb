@@ -52,7 +52,7 @@ class BlueCat
 
   def rest_get(endpoint, querystring)
     rest_login if self.class.token.nil?
-    
+
     # wrapper function to for rest get requests
     logger.debug('BAM GET ' + endpoint + '?' + querystring)
 
@@ -234,7 +234,7 @@ class BlueCat
   end
 
   # public
-  def find_mysubnet(subnet_address)
+  def find_mysubnet(subnet_address: )
     # fetches a subnet by its network address
     net = IPAddress.parse(get_network_by_ip(subnet_address))
     subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
@@ -328,4 +328,6 @@ class BlueCat
     return if host.nil?
     host[0]
   end
+
+
 end
