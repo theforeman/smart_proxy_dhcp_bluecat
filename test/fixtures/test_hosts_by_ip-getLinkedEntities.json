@@ -1,0 +1,1 @@
+[{"id":275183,"name":"xa-master","type":"HostRecord","properties":"absoluteName=examplehost.example.de|addresses=10.100.36.16|reverseRecord=false|"},{"id":301112,"name":"examplehost","type":"HostRecord","properties":"ttl=1200|absoluteName=examplehost.anotherdomain.com|addresses=10.100.36.16|reverseRecord=true|"}]

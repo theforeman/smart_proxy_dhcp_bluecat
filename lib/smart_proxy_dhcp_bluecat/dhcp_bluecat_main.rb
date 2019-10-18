@@ -61,7 +61,7 @@ module Proxy
 
         def find_records_by_ip(subnet_address, ip)
           logger.debug('START find_records_by_ip with subnet_address: ' + subnet_address.to_s + ' ip: ' + ip.to_s)
-          records = @connection.hosts_by_ip(ip)
+          records = @connection.hosts_by_ip(ip: ip)
           logger.debug('END find_records_by_ip with subnet_address: ' + subnet_address.to_s + ' ip: ' + ip.to_s)
           logger.debug('Returned: ' + records.class.to_s + ': ' + records.to_s)
           return [] if records.nil?

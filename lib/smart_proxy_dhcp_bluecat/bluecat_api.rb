@@ -278,7 +278,7 @@ class BlueCat
   end
 
   # public
-  def hosts_by_ip(ip)
+  def hosts_by_ip(ip:)
     # fetches a host by its ip
     hosts = []
     net =  IPAddress.parse(get_network_by_ip(ip))
@@ -288,13 +288,15 @@ class BlueCat
     json = rest_get('getLinkedEntities', 'entityId=' + ipid + '&type=HostRecord&start=0&count=2')
     results = JSON.parse(json)
 
-    if results.empty?
+    if results.empty? or results == "Link request is not supported"
       # no host record on ip, fetch mac only
       json2 = rest_get('getIP4Address', 'containerId=' + @config_id.to_s + '&address=' + ip)
       result2 = JSON.parse(json2)
       properties2 = parse_properties(result2['properties'])
-      mac_address = properties2['macAddress'].tr('-', ':')
-      hosts.push(Proxy::DHCP::Reservation.new("", ip, mac_address, subnet, {}))
+      unless properties2['macAddress'].nil?
+        mac_address = properties2['macAddress'].tr('-', ':')
+        hosts.push(Proxy::DHCP::Reservation.new("", ip, mac_address, subnet, {}))
+      end
     else
       # host record on ip, return more infos
       results.each do |result|
@@ -305,8 +307,8 @@ class BlueCat
         json2 = rest_get('getEntityById', 'id=' + ipid)
         result2 = JSON.parse(json2)
         properties2 = parse_properties(result2['properties'])
+        unless properties2['macAddress'].nil?
         mac_address = properties2['macAddress'].tr('-', ':')
-        unless mac_address.empty?
           hosts.push(Proxy::DHCP::Reservation.new(properties['absoluteName'], ip, mac_address, subnet, opts))
         end
       end
@@ -325,7 +327,7 @@ class BlueCat
     result2 = JSON.parse(json2)
     return if result2.empty?
     properties = parse_properties(result2[0]['properties'])
-    host = hosts_by_ip(properties['address'])
+    host = hosts_by_ip(ip: properties['address'])
     return if host.nil?
     host[0]
   end
