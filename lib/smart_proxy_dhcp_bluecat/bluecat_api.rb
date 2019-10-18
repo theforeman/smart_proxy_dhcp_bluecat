@@ -51,6 +51,8 @@ class BlueCat
   end
 
   def rest_get(endpoint, querystring)
+    rest_login if self.class.token.nil?
+    
     # wrapper function to for rest get requests
     logger.debug('BAM GET ' + endpoint + '?' + querystring)
 

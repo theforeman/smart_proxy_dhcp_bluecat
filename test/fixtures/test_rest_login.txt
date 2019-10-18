@@ -1,0 +1,1 @@
+Body "Session Token-> BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h <- for User : foreman-proxy-svc"
