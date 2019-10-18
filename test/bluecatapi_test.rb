@@ -119,4 +119,46 @@ class BluecatApiTest < Test::Unit::TestCase
 
     assert_equal expected, @connection.find_mysubnet(subnet_address: '10.100.36.0')
   end
+
+
+  def test_hosts
+    fixture_response_login = fixture('test_rest_login.txt')
+
+    stub_request(:get, 'https://bam.example.com/Services/REST/v1/login?password=admin&username=admin').
+      with(
+        headers: {
+          'Content-Type' => 'text/plain'
+        }
+      ).
+      to_return(status: 200, body: fixture_response_login)
+
+    fixture_response = fixture('test_hosts-getIPRangedByIP.json')
+
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getIPRangedByIP?address=10.100.39.0&containerId=123456&type=IP4Network").
+      with(
+        headers: {
+          'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+          'Content-Type' => 'application/json'
+        }
+      ).
+      to_return(status: 200, body: fixture_response)
+
+
+      fixture_response2 = fixture('test_hosts-getNetworkLinkedProperties.json')
+
+      stub_request(:get, "https://bam.example.com/Services/REST/v1/getNetworkLinkedProperties?networkId=242572").
+        with(
+          headers: {
+              'Authorization'=>'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+              'Content-Type'=>'application/json'
+          }).
+        to_return(status: 200, body: fixture_response2)
+
+
+
+    expected = [  ::Proxy::DHCP::Reservation.new("host-dhcp.example.de", "10.100.39.10", "00:50:56:96:d7:88", ::Proxy::DHCP::Subnet.new('10.100.39.0', '255.255.255.192'), {:deleteable=>true, :hostname=>"host-dhcp.example.de"})    ]
+
+    assert_equal expected, @connection.hosts(network_address: '10.100.39.0')
+  end
+
 end

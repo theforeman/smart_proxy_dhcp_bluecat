@@ -234,7 +234,7 @@ class BlueCat
   end
 
   # public
-  def find_mysubnet(subnet_address: )
+  def find_mysubnet(subnet_address:)
     # fetches a subnet by its network address
     net = IPAddress.parse(get_network_by_ip(subnet_address))
     subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
@@ -242,7 +242,7 @@ class BlueCat
   end
 
   # public
-  def get_hosts(network_address)
+  def hosts(network_address:)
     # fetches all dhcp reservations in a subnet
     netid = get_networkid_by_ip(network_address)
     net =  IPAddress.parse(get_network_by_ip(network_address))
@@ -252,10 +252,11 @@ class BlueCat
     results = JSON.parse(json)
 
     hosts = []
-    results.each do |result|
+    hosts = results.map do |result|
       properties = parse_properties(result['properties'])
 
-      # Static Addresses and Gateway are not needed here
+      ## Static Addresses and Gateway are not needed here
+      ## But lets keep the logic to identify them
       # if properties.length() >= 4
       #  if properties["state"] == "Gateway" or properties["state"] == "Static"
       #    address = properties[0].split("=").last()
@@ -263,7 +264,7 @@ class BlueCat
       #    hosttag = properties[3].split("=").last().split(":")
       #    name = hosttag[1] + "." + hosttag[3]
       #    opts = {:hostname => name}
-      #    hosts.push(Proxy::DHCP::Reservation.new(name, address, macAddress, subnet, opts))
+      #    ::Proxy::DHCP::Reservation.new(name, address, macAddress, subnet, opts)
       #  end
       # end
       next unless properties.length >= 5
@@ -271,7 +272,7 @@ class BlueCat
       hosttag = properties['host'].split(':')
       name = hosttag[1] + '.' + hosttag[3]
       opts = { hostname: name }
-      hosts.push(Proxy::DHCP::Reservation.new(name, properties['address'], properties['macAddress'].tr('-', ':'), subnet, opts))
+      ::Proxy::DHCP::Reservation.new(name, properties['address'], properties['macAddress'].tr('-', ':'), subnet, opts)
     end
     hosts.compact
   end
