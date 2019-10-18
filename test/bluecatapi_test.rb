@@ -56,7 +56,7 @@ class BluecatApiTest < Test::Unit::TestCase
     assert_equal expected, @connection.subnets
   end
 
-  def test_get_next_ip
+  def test_next_ip
     fixture_response_login = fixture('test_rest_login.txt')
 
     stub_request(:get, 'https://bam.example.com/Services/REST/v1/login?password=admin&username=admin').
@@ -67,8 +67,8 @@ class BluecatApiTest < Test::Unit::TestCase
       ).
       to_return(status: 200, body: fixture_response_login)
 
-    fixture_response = fixture('test_get_next_ip-getIPRangedByIP.json')
-    fixture_response2 = fixture('test_get_next_ip-getNextIP4Address.json').strip
+    fixture_response = fixture('test_next_ip-getIPRangedByIP.json')
+    fixture_response2 = fixture('test_next_ip-getNextIP4Address.json').strip
 
     stub_request(:get, "https://bam.example.com/Services/REST/v1/getIPRangedByIP?address=10.100.36.0&containerId=123456&type=IP4Network").
       with(
@@ -90,7 +90,7 @@ class BluecatApiTest < Test::Unit::TestCase
 
     expected = "10.100.36.159"
 
-    assert_equal expected, @connection.get_next_ip(netadress: '10.100.36.0', start_ip: '10.100.36.10', end_ip: '10.100.36.30')
+    assert_equal expected, @connection.next_ip(netadress: '10.100.36.0', start_ip: '10.100.36.10', end_ip: '10.100.36.30')
   end
 
   def test_find_mysubnet

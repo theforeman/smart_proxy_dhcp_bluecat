@@ -207,7 +207,7 @@ class BlueCat
 
   # public
   ## end_ip not implemented
-  def get_next_ip(netadress:, start_ip:, end_ip:)
+  def next_ip(netadress:, start_ip:, end_ip:)
     # fetches the next free address in a subnet
     networkid = get_networkid_by_ip(netadress)
 

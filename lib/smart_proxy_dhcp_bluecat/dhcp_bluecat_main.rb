@@ -40,7 +40,7 @@ module Proxy
 
         def unused_ip(subnet, mac_address, from_ip_address, to_ip_address)
           logger.debug('START unused_ip with subnet: ' + subnet.to_s + ' mac_address: ' + mac_address.to_s + ' from_ip_address: ' + from_ip_address.to_s + ' to_ip_address: ' + to_ip_address.to_s)
-          ip = @connection.get_next_ip(subnet, from_ip_address, to_ip_address)
+          ip = @connection.next_ip(subnet, from_ip_address, to_ip_address)
           logger.debug('END unused_ip with subnet: ' + subnet.to_s + ' mac_address: ' + mac_address.to_s + ' from_ip_address: ' + from_ip_address.to_s + ' to_ip_address: ' + to_ip_address.to_s)
           logger.debug('Returned: ' + ip.class.to_s + ': ' + ip.to_s)
           ip
