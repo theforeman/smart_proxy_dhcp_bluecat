@@ -278,7 +278,7 @@ class BlueCat
   end
 
   # public
-  def get_hosts_by_ip(ip)
+  def hosts_by_ip(ip)
     # fetches a host by its ip
     hosts = []
     net =  IPAddress.parse(get_network_by_ip(ip))
@@ -325,7 +325,7 @@ class BlueCat
     result2 = JSON.parse(json2)
     return if result2.empty?
     properties = parse_properties(result2[0]['properties'])
-    host = get_hosts_by_ip(properties['address'])
+    host = hosts_by_ip(properties['address'])
     return if host.nil?
     host[0]
   end
