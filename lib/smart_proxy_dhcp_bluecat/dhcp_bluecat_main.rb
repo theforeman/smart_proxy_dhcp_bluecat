@@ -24,7 +24,7 @@ module Proxy
 
         def all_hosts(network_address)
           logger.debug('START all_hosts with network_address: ' + network_address.to_s)
-          hosts = @connection.get_hosts(network_address)
+          hosts = @connection.hosts(network_address)
           logger.debug('END all_hosts with network_address: ' + network_address.to_s)
           logger.debug('Returned: ' + hosts.class.to_s + ': ' + hosts.to_s)
           hosts
@@ -32,7 +32,7 @@ module Proxy
 
         def all_leases(network_address)
           logger.debug('START all_leases with network_address: ' + network_address.to_s)
-          hosts = @connection.get_hosts(network_address: network_address)
+          hosts = @connection.hosts(network_address: network_address)
           logger.debug('END all_leases with network_address: ' + network_address.to_s)
           logger.debug('Returned: ' + hosts.class.to_s + ': ' + hosts.to_s)
           hosts
@@ -61,7 +61,7 @@ module Proxy
 
         def find_records_by_ip(subnet_address, ip)
           logger.debug('START find_records_by_ip with subnet_address: ' + subnet_address.to_s + ' ip: ' + ip.to_s)
-          records = @connection.hosts_by_ip(ip: ip)
+          records = @connection.hosts_by_ip(ip)
           logger.debug('END find_records_by_ip with subnet_address: ' + subnet_address.to_s + ' ip: ' + ip.to_s)
           logger.debug('Returned: ' + records.class.to_s + ': ' + records.to_s)
           return [] if records.nil?
@@ -78,7 +78,7 @@ module Proxy
 
         def find_subnet(subnet_address)
           logger.debug('START find_subnet with subnet_address: ' + subnet_address.to_s)
-          net = @connection.find_mysubnet(subnet_address: subnet_address)
+          net = @connection.find_mysubnet(subnet_address)
           logger.debug('END find_subnet with subnet_address: ' + subnet_address.to_s)
           logger.debug('Returned: ' + net.class.to_s + ': ' + net.to_s)
           net

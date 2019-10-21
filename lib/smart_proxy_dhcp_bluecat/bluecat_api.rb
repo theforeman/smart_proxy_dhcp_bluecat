@@ -11,7 +11,7 @@ class BlueCat
     attr_accessor :token
   end
 
-  def initialize(scheme:, verify:, host:, parent_block:, view_name:, config_name:, config_id:, server_id:, username:, password:)
+  def initialize(scheme, verify, host, parent_block, view_name, config_name, config_id, server_id, username, password)
     @scheme = scheme
     @verify = verify
     @host = host
@@ -207,7 +207,7 @@ class BlueCat
 
   # public
   ## end_ip not implemented
-  def next_ip(netadress:, start_ip:, end_ip:)
+  def next_ip(netadress, start_ip, end_ip)
     # fetches the next free address in a subnet
     networkid = get_networkid_by_ip(netadress)
 
@@ -234,7 +234,7 @@ class BlueCat
   end
 
   # public
-  def find_mysubnet(subnet_address:)
+  def find_mysubnet(subnet_address)
     # fetches a subnet by its network address
     net = IPAddress.parse(get_network_by_ip(subnet_address))
     subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
@@ -242,7 +242,7 @@ class BlueCat
   end
 
   # public
-  def hosts(network_address:)
+  def hosts(network_address)
     # fetches all dhcp reservations in a subnet
     netid = get_networkid_by_ip(network_address)
     net =  IPAddress.parse(get_network_by_ip(network_address))
@@ -278,7 +278,7 @@ class BlueCat
   end
 
   # public
-  def hosts_by_ip(ip:)
+  def hosts_by_ip(ip)
     # fetches a host by its ip
     hosts = []
     net =  IPAddress.parse(get_network_by_ip(ip))

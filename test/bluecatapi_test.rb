@@ -8,7 +8,7 @@ require 'smart_proxy_dhcp_bluecat/bluecat_api'
 
 class BluecatApiTest < Test::Unit::TestCase
   def setup
-    @connection = BlueCat.new(scheme: 'https', verify: true, host: 'bam.example.com', parent_block: 123456, view_name: 'default', config_name: 'default', config_id: 100881, server_id: 123456, username: 'admin', password: 'admin')
+    @connection = BlueCat.new('https', true, 'bam.example.com', 123456, 'default', 'default', 100881, 123456, 'admin', 'admin')
   end
 
   def test_rest_login
@@ -85,7 +85,7 @@ class BluecatApiTest < Test::Unit::TestCase
 
     expected = "10.100.36.159"
 
-    assert_equal expected, @connection.next_ip(netadress: '10.100.36.0', start_ip: '10.100.36.10', end_ip: '10.100.36.30')
+    assert_equal expected, @connection.next_ip('10.100.36.0', '10.100.36.10', '10.100.36.30')
   end
 
   def test_find_mysubnet
@@ -110,7 +110,7 @@ class BluecatApiTest < Test::Unit::TestCase
 
     expected = ::Proxy::DHCP::Subnet.new('10.100.36.0', '255.255.255.192')
 
-    assert_equal expected, @connection.find_mysubnet(subnet_address: '10.100.36.0')
+    assert_equal expected, @connection.find_mysubnet('10.100.36.0')
   end
 
 
@@ -148,7 +148,7 @@ class BluecatApiTest < Test::Unit::TestCase
 
     expected = [::Proxy::DHCP::Reservation.new("host-dhcp.example.de", "10.100.39.10", "00:50:56:96:d7:88", ::Proxy::DHCP::Subnet.new('10.100.39.0', '255.255.255.192'), {:deleteable=>true, :hostname=>"host-dhcp.example.de"})]
 
-    assert_equal expected, @connection.hosts(network_address: '10.100.39.0')
+    assert_equal expected, @connection.hosts('10.100.39.0')
   end
 
 
@@ -204,12 +204,12 @@ class BluecatApiTest < Test::Unit::TestCase
               ).
               to_return(status: 200, body: fixture_response4)
 
-  
+
 
                 expected = [::Proxy::DHCP::Reservation.new("examplehost.anotherdomain.com", "10.100.36.16", "00:50:56:96:ee:c0", ::Proxy::DHCP::Subnet.new('10.100.36.0', '255.255.255.192'), {:deleteable=>true, :hostname=>"examplehost.anotherdomain.com"})]
 
 
-      assert_equal expected, @connection.hosts_by_ip(ip: '10.100.36.16')
+      assert_equal expected, @connection.hosts_by_ip('10.100.36.16')
 
     end
 
