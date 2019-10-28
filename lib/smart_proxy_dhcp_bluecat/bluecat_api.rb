@@ -251,7 +251,6 @@ class BlueCat
     json = rest_get('getNetworkLinkedProperties', 'networkId=' + netid.to_s)
     results = JSON.parse(json)
 
-    hosts = []
     hosts = results.map do |result|
       properties = parse_properties(result['properties'])
 
