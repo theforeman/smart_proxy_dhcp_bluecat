@@ -24,7 +24,7 @@ module Proxy
 
         def all_hosts(network_address)
           logger.debug('START all_hosts with network_address: ' + network_address.to_s)
-          hosts = @connection.get_hosts(network_address)
+          hosts = @connection.hosts(network_address)
           logger.debug('END all_hosts with network_address: ' + network_address.to_s)
           logger.debug('Returned: ' + hosts.class.to_s + ': ' + hosts.to_s)
           hosts
@@ -32,7 +32,7 @@ module Proxy
 
         def all_leases(network_address)
           logger.debug('START all_leases with network_address: ' + network_address.to_s)
-          hosts = @connection.get_hosts(network_address)
+          hosts = @connection.hosts(network_address)
           logger.debug('END all_leases with network_address: ' + network_address.to_s)
           logger.debug('Returned: ' + hosts.class.to_s + ': ' + hosts.to_s)
           hosts
@@ -40,7 +40,7 @@ module Proxy
 
         def unused_ip(subnet, mac_address, from_ip_address, to_ip_address)
           logger.debug('START unused_ip with subnet: ' + subnet.to_s + ' mac_address: ' + mac_address.to_s + ' from_ip_address: ' + from_ip_address.to_s + ' to_ip_address: ' + to_ip_address.to_s)
-          ip = @connection.get_next_ip(subnet, from_ip_address, to_ip_address)
+          ip = @connection.next_ip(subnet, from_ip_address, to_ip_address)
           logger.debug('END unused_ip with subnet: ' + subnet.to_s + ' mac_address: ' + mac_address.to_s + ' from_ip_address: ' + from_ip_address.to_s + ' to_ip_address: ' + to_ip_address.to_s)
           logger.debug('Returned: ' + ip.class.to_s + ': ' + ip.to_s)
           ip
@@ -61,7 +61,7 @@ module Proxy
 
         def find_records_by_ip(subnet_address, ip)
           logger.debug('START find_records_by_ip with subnet_address: ' + subnet_address.to_s + ' ip: ' + ip.to_s)
-          records = @connection.get_hosts_by_ip(ip)
+          records = @connection.hosts_by_ip(ip)
           logger.debug('END find_records_by_ip with subnet_address: ' + subnet_address.to_s + ' ip: ' + ip.to_s)
           logger.debug('Returned: ' + records.class.to_s + ': ' + records.to_s)
           return [] if records.nil?
@@ -70,7 +70,7 @@ module Proxy
 
         def find_record_by_mac(subnet_address, mac_address)
           logger.debug('START find_record_by_mac with subnet_address: ' + subnet_address.to_s + ' mac_address: ' + mac_address.to_s)
-          record = @connection.get_host_by_mac(mac_address)
+          record = @connection.host_by_mac(mac_address)
           logger.debug('END find_record_by_mac with subnet_address: ' + subnet_address.to_s + ' mac_address: ' + mac_address.to_s)
           logger.debug('Returned: ' + record.class.to_s + ': ' + record.to_s)
           record

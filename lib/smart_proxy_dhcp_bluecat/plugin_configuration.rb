@@ -10,7 +10,7 @@ module Proxy
 
         def load_dependency_injection_wirings(c, settings)
           c.dependency :connection, (lambda do
-                                       BlueCat.new(
+                                       ::Proxy::DHCP::BlueCat::BlueCatAPI.new(
                                          settings[:scheme],
                                          settings[:verify],
                                          settings[:host],

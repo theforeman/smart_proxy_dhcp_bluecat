@@ -1,0 +1,20 @@
+[
+   {
+      "id":242573,
+      "name":null,
+      "type":"IP4Address",
+      "properties":"address=10.100.39.1|ipLong=174335745|state=Gateway|host={269268:gateway:242992:example.de:242989:default:F}"
+   },
+   {
+      "id":268411,
+      "name":null,
+      "type":"IP4Address",
+      "properties":"address=10.100.39.5|ipLong=174335747|state=Static|host={269099:host-static:242992:example.de:242989:default:F}"
+   },
+   {
+      "id":602364,
+      "name":null,
+      "type":"IP4Address",
+      "properties":"address=10.100.39.10|ipLong=174335754|state=DHCP Reserved|macAddress=00-50-56-96-d7-88|host={602366:host-dhcp:242992:example.de:242989:default:F}"
+   }
+]
