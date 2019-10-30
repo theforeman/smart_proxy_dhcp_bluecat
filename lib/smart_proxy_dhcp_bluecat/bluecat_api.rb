@@ -231,6 +231,12 @@ module Proxy
             properties = parse_properties(result['properties'])
             net = IPAddress.parse(properties['CIDR'])
             opts = { routers: [properties['gateway']] }
+
+            if properties['gateway'].nil?
+              logger.error("subnet issue: " + properties['CIDR'] + " skipped, due missing gateway in bluecat")
+              next
+            end
+
             ::Proxy::DHCP::Subnet.new(net.address, net.netmask, opts)
           end
           subnets.compact
