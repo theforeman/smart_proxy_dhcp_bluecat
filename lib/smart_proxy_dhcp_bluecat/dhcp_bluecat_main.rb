@@ -32,7 +32,7 @@ module Proxy
 
         def all_leases(network_address)
           logger.debug('START all_leases with network_address: ' + network_address.to_s)
-          hosts = @connection.hosts(network_address: network_address)
+          hosts = @connection.hosts(network_address)
           logger.debug('END all_leases with network_address: ' + network_address.to_s)
           logger.debug('Returned: ' + hosts.class.to_s + ': ' + hosts.to_s)
           hosts
