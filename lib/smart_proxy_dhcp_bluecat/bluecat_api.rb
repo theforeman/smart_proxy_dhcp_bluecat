@@ -316,7 +316,7 @@ class BlueCat
   end
 
   # public
-  def get_host_by_mac(mac)
+  def host_by_mac(mac)
     # fetches all dhcp reservations by a mac
     json = rest_get('getMACAddress', 'configurationId=' + @config_id.to_s + '&macAddress=' + mac.to_s)
     result = JSON.parse(json)
@@ -326,7 +326,7 @@ class BlueCat
     result2 = JSON.parse(json2)
     return if result2.empty?
     properties = parse_properties(result2[0]['properties'])
-    host = hosts_by_ip(ip: properties['address'])
+    host = hosts_by_ip(properties['address'])
     return if host.nil?
     host[0]
   end

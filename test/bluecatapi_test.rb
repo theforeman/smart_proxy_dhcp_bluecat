@@ -146,7 +146,7 @@ class BluecatApiTest < Test::Unit::TestCase
 
     assert_equal expected, @connection.hosts('10.100.39.0')
   end
-  
+
   def test_hosts_by_ip
     fixture_response_login = fixture('test_rest_login.txt')
     stub_request(:get, 'https://bam.example.com/Services/REST/v1/login?password=admin&username=admin').
@@ -200,5 +200,81 @@ class BluecatApiTest < Test::Unit::TestCase
     expected = [::Proxy::DHCP::Reservation.new("examplehost.anotherdomain.com", "10.100.36.16", "00:50:56:96:ee:c0", ::Proxy::DHCP::Subnet.new('10.100.36.0', '255.255.255.192'), :deleteable => true, :hostname => "examplehost.anotherdomain.com")]
 
     assert_equal expected, @connection.hosts_by_ip('10.100.36.16')
+  end
+  def test_host_by_mac
+    fixture_response_login = fixture('test_rest_login.txt')
+    stub_request(:get, 'https://bam.example.com/Services/REST/v1/login?password=admin&username=admin').
+      with(
+        headers: {
+          'Content-Type' => 'text/plain'
+        }
+      ).
+      to_return(status: 200, body: fixture_response_login)
+
+    fixture_response = fixture('test_host_by_mac-getMACAddress.json')
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getMACAddress?configurationId=100881&macAddress=AA-FF-FF-EE-00-11").
+      with(
+        headers: {
+          'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+          'Content-Type' => 'application/json'
+        }
+      ).
+      to_return(status: 200, body: fixture_response)
+
+    fixture_response2 = fixture('test_host_by_mac-getLinkedEntities.json')
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getLinkedEntities?count=1&entityId=326799&start=0&type=IP4Address").
+      with(
+        headers: {
+          'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+          'Content-Type' => 'application/json'
+        }
+      ).
+      to_return(status: 200, body: fixture_response2)
+
+    fixture_response3 = fixture('test_host_by_mac-getIPRangedByIP.json')
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getIPRangedByIP?address=10.100.39.13&containerId=100881&type=IP4Network").
+    with(
+      headers: {
+        'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+        'Content-Type' => 'application/json'
+      }
+    ).
+    to_return(status: 200, body: fixture_response3)
+
+    fixture_response4 = fixture('test_host_by_mac-getIP4Address.json')
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getIP4Address?address=10.100.39.13&containerId=100881").
+    with(
+      headers: {
+        'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+        'Content-Type' => 'application/json'
+      }
+    ).
+    to_return(status: 200, body: fixture_response4)
+
+    fixture_response5 = fixture('test_host_by_mac-getLinkedEntities2.json')
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getLinkedEntities?count=2&entityId=266372&start=0&type=HostRecord").
+    with(
+      headers: {
+        'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+        'Content-Type' => 'application/json'
+      }
+    ).
+    to_return(status: 200, body: fixture_response5)
+
+
+    fixture_response6 = fixture('test_host_by_mac-getEntityById.json')
+    stub_request(:get, "https://bam.example.com/Services/REST/v1/getEntityById?id=266372").
+    with(
+      headers: {
+        'Authorization' => 'BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h',
+        'Content-Type' => 'application/json'
+      }
+    ).
+    to_return(status: 200, body: fixture_response6)
+
+    expected = ::Proxy::DHCP::Reservation.new("myhostname.domain.de", "10.100.39.13", "aa:ff:ff:ee:00:11", ::Proxy::DHCP::Subnet.new('10.100.39.0', '255.255.255.192'), :deleteable => true, :hostname => "myhostname.domain.de")
+
+    assert_equal expected, @connection.host_by_mac('AA-FF-FF-EE-00-11')
+
   end
 end
