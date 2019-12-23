@@ -5,12 +5,44 @@ require 'json'
 module Proxy
   module DHCP
     module BlueCat
+
+      ##
+      # This Class handles all commuincation to the bluecat address manager
       class BlueCatAPI
         include ::Proxy::Log
 
-        attr_reader :scheme, :verify, :host, :parent_block, :view_name, :config_name, :config_id, :server_id, :username, :password
+        # connection mode to the address manager. http or https
+        attr_reader :scheme
+
+        # validate ssl connection. true or false
+        attr_reader :verify
+
+        # fqdn or ip of your bluecat address manager
+        attr_reader :host
+
+        # id of the parent_block that holds the subnets that you want to use
+        attr_reader :parent_block
+
+        # name of your dns view
+        attr_reader :view_name
+
+        # Name of your Bluecat configuration
+        attr_reader :config_name
+
+        # id of your Bluecat configuration
+        attr_reader :config_id
+
+        # id of the server that holds your dhcp
+        attr_reader :server_id
+
+        # credentials of your api user
+        attr_reader :username
+
+        # credentials of your api user
+        attr_reader :password
 
         class << self
+          # contains the bluecat api token
           attr_accessor :token
         end
 
@@ -27,8 +59,8 @@ module Proxy
           @password = password
         end
 
+        # login to bam, parse the session token
         def rest_login
-          # login to bam, parse the session token
           logger.debug('BAM Login ' + @scheme + ' ' + @host + ' ')
           response = HTTParty.get(format('%s://%s/Services/REST/v1/login?username=%s&password=%s', @scheme, @host, @username, @password),
                                   headers: { 'Content-Type' => 'text/plain' },
@@ -44,8 +76,9 @@ module Proxy
           self.class.token = token[0].to_s
         end
 
+
+        # logout from bam
         def rest_logout
-          # logout from bam,
           logger.debug('BAM Logout ')
           response = HTTParty.get(format('%s://%s/Services/REST/v1/logout', @scheme, @host),
                                   headers: { 'Authorization' => 'BAMAuthToken: ' + self.class.token, 'Content-Type' => 'application/json' },
@@ -53,10 +86,10 @@ module Proxy
           logger.error('BAM Logout Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s) if response.code != 200
         end
 
+        # wrapper function to for rest get requests
         def rest_get(endpoint, querystring)
           rest_login if self.class.token.nil?
 
-          # wrapper function to for rest get requests
           logger.debug('BAM GET ' + endpoint + '?' + querystring)
 
           response = HTTParty.get(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
@@ -74,8 +107,8 @@ module Proxy
           logger.error('BAM GET Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
         end
 
+        # wrapper function to for rest post requests
         def rest_post(endpoint, querystring)
-          # wrapper function to for rest post requests
           logger.debug('BAM POST ' + endpoint + '?' + querystring)
           response = HTTParty.post(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
                                    headers: { 'Authorization' => 'BAMAuthToken: ' + self.class.token, 'Content-Type' => 'application/json' },
@@ -92,8 +125,8 @@ module Proxy
           logger.error('BAM POST Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
         end
 
+        # wrapper function to for rest put requests
         def rest_put(endpoint, querystring)
-          # wrapper function to for rest put requests
           logger.debug('BAM PUT ' + endpoint + '?' + querystring)
           response = HTTParty.put(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
                                   headers: { 'Authorization' => 'BAMAuthToken: ' + self.class.token, 'Content-Type' => 'application/json' },
@@ -109,8 +142,8 @@ module Proxy
           logger.error('BAM PUT Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
         end
 
+        # wrapper function to for rest delete requests
         def rest_delete(endpoint, querystring)
-          # wrapper function to for rest delete requests
           logger.debug('BAM DELETE ' + endpoint + '?' + querystring)
           response = HTTParty.delete(format('%s://%s/Services/REST/v1/%s?%s', @scheme, @host, endpoint, querystring),
                                      headers: { 'Authorization' => 'BAMAuthToken: ' + self.class.token, 'Content-Type' => 'application/json' },
@@ -127,16 +160,16 @@ module Proxy
           logger.error('BAM DELETE Failed. HTTP' + response.code.to_s + ' ' + response.body.to_s)
         end
 
+        # helper function to get the object id of a ip by an ip address
         def get_addressid_by_ip(ip)
-          # helper function to get the object id of a ip by an ip address
           json = rest_get('getIP4Address', 'containerId=' + @config_id.to_s + '&address=' + ip)
           result = JSON.parse(json)
           return nil if result.empty?
           result['id'].to_s
         end
 
+        # helper function to get the object id of a subnet by an ip address
         def get_networkid_by_ip(ip)
-          # helper function to get the object id of a subnet by an ip address
           logger.debug('BAM get_networkid_by_ip ' + ip)
           querystring = 'containerId=' + @config_id.to_s + '&type=IP4Network' + '&address=' + ip.to_s
           json = rest_get('getIPRangedByIP', querystring)
@@ -145,8 +178,8 @@ module Proxy
           result['id'].to_s
         end
 
+        # helper function to get the whole subnet informarions by an ip address
         def get_network_by_ip(ip)
-          # helper function to get the whole subnet informarions by an ip address
           logger.debug('BAM get_network_by_ip ' + ip)
           querystring = 'containerId=' + @config_id.to_s + '&type=IP4Network' + '&address=' + ip.to_s
           json = rest_get('getIPRangedByIP', querystring)
@@ -155,10 +188,11 @@ module Proxy
           properties['CIDR'].to_s
         end
 
+        # helper function to parse the properties scheme of bluecat into a hash
+        #
+        # properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character.
+        # For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
         def parse_properties(properties)
-          # helper function to parse the properties scheme of bluecat into a hash
-          # => properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character.
-          # For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
           properties = properties.split('|')
           h = {}
           properties.each do |property|
@@ -168,8 +202,8 @@ module Proxy
         end
 
         # public
+        # wrapper function to add the dhcp reservation and dns records
         def add_host(options)
-          # wrapper function to add the dhcp reservation and dns records
 
           # add the ip and hostname and mac as static
           rest_post('addDeviceInstance', 'configName=' + @config_name +
@@ -198,8 +232,8 @@ module Proxy
         end
 
         # public
+        # wrapper function to remove a dhcp reservation and dns records
         def remove_host(ip)
-          # wrapper function to remove a dhcp reservation and dns records
           # deploy the config, without a clean config the removal fails sometimes
           rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
           # remove the ip and depending records
@@ -209,9 +243,9 @@ module Proxy
         end
 
         # public
-        ## end_ip not implemented
+        # fetches the next free address in a subnet
+        # +end_ip not implemented+
         def next_ip(netadress, start_ip, end_ip)
-          # fetches the next free address in a subnet
           networkid = get_networkid_by_ip(netadress)
 
           start_ip = IPAddress.parse(netadress).first if start_ip.to_s.empty?
@@ -223,8 +257,8 @@ module Proxy
         end
 
         # public
+        # fetches all subnets under the parent_block
         def subnets
-          # fetches all subnets under the parent_block
           json = rest_get('getEntities', 'parentId=' + @parent_block.to_s + '&type=IP4Network&start=0&count=10000')
           results = JSON.parse(json)
           subnets = results.map do |result|
@@ -243,16 +277,16 @@ module Proxy
         end
 
         # public
+        # fetches a subnet by its network address
         def find_mysubnet(subnet_address)
-          # fetches a subnet by its network address
           net = IPAddress.parse(get_network_by_ip(subnet_address))
           subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
           subnet
         end
 
         # public
+        # fetches all dhcp reservations in a subnet
         def hosts(network_address)
-          # fetches all dhcp reservations in a subnet
           netid = get_networkid_by_ip(network_address)
           net =  IPAddress.parse(get_network_by_ip(network_address))
           subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
@@ -286,8 +320,8 @@ module Proxy
         end
 
         # public
+        # fetches a host by its ip
         def hosts_by_ip(ip)
-          # fetches a host by its ip
           hosts = []
           net =  IPAddress.parse(get_network_by_ip(ip))
           subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
@@ -325,8 +359,8 @@ module Proxy
         end
 
         # public
+        # fetches all dhcp reservations by a mac
         def host_by_mac(mac)
-          # fetches all dhcp reservations by a mac
           json = rest_get('getMACAddress', 'configurationId=' + @config_id.to_s + '&macAddress=' + mac.to_s)
           result = JSON.parse(json)
           macid = result['id'].to_s

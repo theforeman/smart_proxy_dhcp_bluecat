@@ -3,15 +3,15 @@
 # Configuration file for 'dhcp_bluecat' dhcp provider
 #
 
-#connection mode to the address manager
-#https or http
+# connection mode to the address manager
+# https or http
 :scheme: "https"
 
 # validate ssl connection
 # true or false
 :verify: true
 
-#fqdn or ip of your bluecat address manager
+# fqdn or ip of your bluecat address manager
 :host: "192.168.0.2"
 
 # id of the parent_block that holds the subnets that you want to use
