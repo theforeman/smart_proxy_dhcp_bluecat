@@ -234,12 +234,23 @@ module Proxy
         # public
         # wrapper function to remove a dhcp reservation and dns records
         def remove_host(ip)
-          # deploy the config, without a clean config the removal fails sometimes
+          ipid = get_addressid_by_ip(ip)
+          json = rest_get('getLinkedEntities', 'entityId=' + ipid + '&type=HostRecord&start=0&count=2')
+          results = JSON.parse(json)
+
+          hosts = results.map do |result|
+            rest_delete('delete', 'objectId=' + result['id'])
+          end
+          rest_delete('delete', 'objectId=' + ipid)
+
           rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
-          # remove the ip and depending records
-          rest_delete('deleteDeviceInstance', 'configName=' + @config_name + '&identifier=' + ip)
-          # deploy the config again
-          rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
+
+          ## deploy the config, without a clean config the removal fails sometimes
+          #rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
+          ## remove the ip and depending records
+          #rest_delete('deleteDeviceInstance', 'configName=' + @config_name + '&identifier=' + ip)
+          ## deploy the config again
+          #rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
         end
 
         # public
