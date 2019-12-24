@@ -5,7 +5,6 @@ require 'json'
 module Proxy
   module DHCP
     module BlueCat
-
       ##
       # This Class handles all commuincation to the bluecat address manager
       class BlueCatAPI
@@ -75,7 +74,6 @@ module Proxy
           logger.debug('BAM Login Token ' + token[0].to_s)
           self.class.token = token[0].to_s
         end
-
 
         # logout from bam
         def rest_logout
@@ -204,7 +202,6 @@ module Proxy
         # public
         # wrapper function to add the dhcp reservation and dns records
         def add_host(options)
-
           # add the ip and hostname and mac as static
           rest_post('addDeviceInstance', 'configName=' + @config_name +
                                          '&ipAddressMode=PASS_VALUE' \
@@ -223,6 +220,7 @@ module Proxy
           rest_put('changeStateIP4Address', 'addressId=' + address_id +
                                             '&targetState=MAKE_DHCP_RESERVED' \
                                             '&macAddress=' + options['mac'])
+
           # deploy the config
           rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP')
           # lets wait a little bit for the complete dhcp deploy
@@ -232,13 +230,17 @@ module Proxy
         end
 
         # public
-        # wrapper function to remove a dhcp reservation and dns records
+        # wrapper function to remove a ip record and depending dns records
         def remove_host(ip)
-          # deploy the config, without a clean config the removal fails sometimes
-          rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
-          # remove the ip and depending records
-          rest_delete('deleteDeviceInstance', 'configName=' + @config_name + '&identifier=' + ip)
-          # deploy the config again
+          ipid = get_addressid_by_ip(ip)
+          json = rest_get('getLinkedEntities', 'entityId=' + ipid.to_s + '&type=HostRecord&start=0&count=2')
+          results = JSON.parse(json)
+
+          hosts = results.map do |result|
+            rest_delete('delete', 'objectId=' + result['id'].to_s)
+          end
+          rest_delete('delete', 'objectId=' + ipid.to_s)
+
           rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP,DNS')
         end
 
