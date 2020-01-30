@@ -221,10 +221,10 @@ module Proxy
                                             '&targetState=MAKE_DHCP_RESERVED' \
                                             '&macAddress=' + options['mac'])
 
-          unless options['nextServer'].empty?
+          unless options['nextServer'].nil?
             rest_post('addDHCPClientDeploymentOption', 'entityId=' + address_id.to_s + '&name=tftp-server-name' + "&value=" + options['nextServer'].to_s)
           end
-          unless options['filename'].empty?
+          unless options['filename'].nil?
             rest_post('addDHCPClientDeploymentOption', 'entityId=' + address_id.to_s + '&name=boot-file-name' + "&value=" + options['filename'].to_s)
           end
 
