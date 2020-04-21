@@ -221,6 +221,11 @@ module Proxy
                                             '&targetState=MAKE_DHCP_RESERVED' \
                                             '&macAddress=' + options['mac'])
 
+          unless options['nextServer'].nil? or options['filename'].nil?
+            rest_post('addDHCPClientDeploymentOption', 'entityId=' + address_id.to_s + '&name=tftp-server-name' + "&value=" + options['nextServer'].to_s)
+            rest_post('addDHCPClientDeploymentOption', 'entityId=' + address_id.to_s + '&name=boot-file-name' + "&value=" + options['filename'].to_s)
+          end
+
           # deploy the config
           rest_post('deployServerConfig', 'serverId=' + @server_id.to_s + '&properties=services=DHCP')
           # lets wait a little bit for the complete dhcp deploy
