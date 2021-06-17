@@ -3,14 +3,21 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  jekyll:
+  test:
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.5', '2.6', '2.7']
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.5'
-          bundler-cache: true
-      - name: Run tests
-        run: bundle exec rake build
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: Run tests
+      run: rake
+    - name: Build
+      run: gem build *.gemspec
