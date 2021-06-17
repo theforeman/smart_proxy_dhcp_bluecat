@@ -1,9 +1,7 @@
-require 'test/unit'
-require 'mocha/test_unit'
+require 'test_helper'
 require 'webmock'
 require 'webmock/test_unit'
 require 'httparty'
-require 'test_helper'
 require 'dhcp_common/subnet'
 require 'smart_proxy_dhcp_bluecat/bluecat_api'
 
