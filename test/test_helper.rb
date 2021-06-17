@@ -2,6 +2,8 @@ require 'rubygems'
 require 'test/unit'
 require 'mocha/test_unit'
 
+$LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'smart_proxy_for_testing'
 
 # create log directory in our (not smart-proxy) directory
