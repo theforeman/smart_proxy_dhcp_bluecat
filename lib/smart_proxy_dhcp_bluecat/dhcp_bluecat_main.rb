@@ -81,7 +81,7 @@ module Proxy
         # returns a record based on a mac address
         def find_record_by_mac(subnet_address, mac_address)
           logger.debug('START find_record_by_mac with subnet_address: ' + subnet_address.to_s + ' mac_address: ' + mac_address.to_s)
-          record = @connection.host_by_mac(mac_address)
+          record = @connection.host_by_mac_and_subnet(subnet_address, mac_address)
           logger.debug('END find_record_by_mac with subnet_address: ' + subnet_address.to_s + ' mac_address: ' + mac_address.to_s)
           logger.debug('Returned: ' + record.class.to_s + ': ' + record.to_s)
           record

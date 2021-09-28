@@ -367,18 +367,26 @@ module Proxy
 
         # public
         # fetches all dhcp reservations by a mac
-        def host_by_mac(mac)
+        def host_by_mac_and_subnet(subnet_of_host, mac)
+          subnet = IPAddress(subnet_of_host)
           json = rest_get('getMACAddress', 'configurationId=' + @config_id.to_s + '&macAddress=' + mac.to_s)
           result = JSON.parse(json)
           macid = result['id'].to_s
           return if macid == '0'
-          json2 = rest_get('getLinkedEntities', 'entityId=' + macid + '&type=IP4Address&start=0&count=1')
+          json2 = rest_get('getLinkedEntities', 'entityId=' + macid + '&type=IP4Address&start=0&count=9999')
           result2 = JSON.parse(json2)
           return if result2.empty?
-          properties = parse_properties(result2[0]['properties'])
-          host = hosts_by_ip(properties['address'])
-          return if host.nil?
-          host[0]
+
+          result2.each do |address|
+            properties = parse_properties(address)
+            ip = IPAddress(address_properties['address'])
+            next unless subnet.include? ip
+
+            host = hosts_by_ip(properties['address'])
+            return if host.nil?
+            host[0]
+          end
+
         end
       end
     end

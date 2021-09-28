@@ -1,10 +1,4 @@
-require 'mocha'
-require 'webmock'
-require 'webmock/test_unit'
-require 'httparty'
 require 'test_helper'
-require 'dhcp_common/subnet'
-require 'smart_proxy_dhcp_bluecat/bluecat_api'
 
 class BluecatApiTest < Test::Unit::TestCase
   def setup
@@ -202,7 +196,7 @@ class BluecatApiTest < Test::Unit::TestCase
     assert_equal expected, @connection.hosts_by_ip('10.100.36.16')
   end
 
-  def test_host_by_mac
+  def test_host_by_mac_and_subnet
     fixture_response_login = fixture('test_rest_login.txt')
     stub_request(:get, 'https://bam.example.com/Services/REST/v1/login?password=admin&username=admin').
       with(
