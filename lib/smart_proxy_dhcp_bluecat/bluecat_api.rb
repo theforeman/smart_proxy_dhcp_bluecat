@@ -60,18 +60,20 @@ module Proxy
 
         # login to bam, parse the session token
         def rest_login
-          logger.debug("BAM Login " + @scheme + " " + @host + " ")
-          response = HTTParty.get(format("%s://%s/Services/REST/v1/login?username=%s&password=%s", @scheme, @host, @username, @password),
+          logger.debug("BAM Login #{@scheme} #{@host} ")
+          response = HTTParty.get(format("%s://%s/Services/REST/v1/login?username=%s&password=%s",
+                                         @scheme,
+                                         @host,
+                                         @username,
+                                         @password),
                                   headers: { "Content-Type" => "text/plain" },
                                   verify => @verify)
-          if response.code != 200
-            logger.error("BAM Login Failed. HTTP" + response.code.to_s + " " + response.body.to_s)
-          end
+          logger.error("BAM Login Failed. HTTP#{response.code} #{response.body}") if response.code != 200
           body = response.body.to_s
           token = body.match(/BAMAuthToken:\s+(\S+)/).captures
 
-          logger.debug("BAM Login Body " + response.body)
-          logger.debug("BAM Login Token " + token[0].to_s)
+          logger.debug("BAM Login Body #{response.body}")
+          logger.debug("BAM Login Token #{token[0]}")
           self.class.token = token[0].to_s
         end
 
@@ -79,81 +81,81 @@ module Proxy
         def rest_logout
           logger.debug("BAM Logout ")
           response = HTTParty.get(format("%s://%s/Services/REST/v1/logout", @scheme, @host),
-                                  headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                  headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                              "Content-Type" => "application/json" },
                                   verify: @verify)
-          logger.error("BAM Logout Failed. HTTP" + response.code.to_s + " " + response.body.to_s) if response.code != 200
+          logger.error("BAM Logout Failed. HTTP#{response.code} #{response.body}") if response.code != 200
         end
 
         # wrapper function to for rest get requests
         def rest_get(endpoint, querystring)
           rest_login if self.class.token.nil?
 
-          logger.debug("BAM GET " + endpoint + "?" + querystring)
+          logger.debug("BAM GET #{endpoint}?#{querystring}")
 
           response = HTTParty.get(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                  headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                  headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                              "Content-Type" => "application/json" },
                                   verify: @verify)
           # Session propably expired, refresh it and do the request again
           if response.code == 401
             rest_login
             response = HTTParty.get(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                    headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                    headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                                "Content-Type" => "application/json" },
                                     verify: @verify)
           end
 
           return response.body if response.code == 200
 
-          logger.error("BAM GET Failed. HTTP" + response.code.to_s + " " + response.body.to_s)
+          logger.error("BAM GET Failed. HTTP#{response.code} #{response.body}")
         end
 
         # wrapper function to for rest post requests
         def rest_post(endpoint, querystring)
-          logger.debug("BAM POST " + endpoint + "?" + querystring)
+          logger.debug("BAM POST #{endpoint}?#{querystring}")
           response = HTTParty.post(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                   headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                   headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                               "Content-Type" => "application/json" },
                                    verify: @verify)
           # Session propably expired, refresh it and do the request again
           if response.code == 401
             rest_login
             response = HTTParty.post(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                     headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                     headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                                 "Content-Type" => "application/json" },
                                      verify: @verify)
           end
           return response.body if response.code == 200
 
-          logger.error("BAM POST Failed. HTTP" + response.code.to_s + " " + response.body.to_s)
+          logger.error("BAM POST Failed. HTTP#{response.code} #{response.body}")
         end
 
         # wrapper function to for rest put requests
         def rest_put(endpoint, querystring)
-          logger.debug("BAM PUT " + endpoint + "?" + querystring)
+          logger.debug("BAM PUT #{endpoint}?#{querystring}")
           response = HTTParty.put(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                  headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                  headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                              "Content-Type" => "application/json" },
                                   verify: @verify)
           # Session propably expired, refresh it and do the request again
           if response.code == 401
             rest_login
             response = HTTParty.put(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                    headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                    headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                                "Content-Type" => "application/json" },
                                     verify: @verify)
           end
           return response.body if response.code == 200
 
-          logger.error("BAM PUT Failed. HTTP" + response.code.to_s + " " + response.body.to_s)
+          logger.error("BAM PUT Failed. HTTP#{response.code} #{response.body}")
         end
 
         # wrapper function to for rest delete requests
         def rest_delete(endpoint, querystring)
-          logger.debug("BAM DELETE " + endpoint + "?" + querystring)
+          logger.debug("BAM DELETE #{endpoint}?#{querystring}")
           response = HTTParty.delete(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                     headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                     headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                                 "Content-Type" => "application/json" },
                                      verify: @verify)
 
@@ -161,18 +163,18 @@ module Proxy
           if response.code == 401
             rest_login
             response = HTTParty.delete(format("%s://%s/Services/REST/v1/%s?%s", @scheme, @host, endpoint, querystring),
-                                       headers: { "Authorization" => "BAMAuthToken: " + self.class.token,
+                                       headers: { "Authorization" => "BAMAuthToken: #{self.class.token}",
                                                   "Content-Type" => "application/json" },
                                        verify: @verify)
           end
           return response.body if response.code == 200
 
-          logger.error("BAM DELETE Failed. HTTP" + response.code.to_s + " " + response.body.to_s)
+          logger.error("BAM DELETE Failed. HTTP#{response.code} #{response.body}")
         end
 
         # helper function to get the object id of a ip by an ip address
         def get_addressid_by_ip(ip)
-          json = rest_get("getIP4Address", "containerId=" + @config_id.to_s + "&address=" + ip)
+          json = rest_get("getIP4Address", "containerId=#{@config_id}&address=#{ip}")
           result = JSON.parse(json)
           return nil if result.empty?
 
@@ -181,8 +183,8 @@ module Proxy
 
         # helper function to get the object id of a subnet by an ip address
         def get_networkid_by_ip(ip)
-          logger.debug("BAM get_networkid_by_ip " + ip)
-          querystring = "containerId=" + @config_id.to_s + "&type=IP4Network" + "&address=" + ip.to_s
+          logger.debug("BAM get_networkid_by_ip #{ip}")
+          querystring = "containerId=#{@config_id}&type=IP4Network&address=#{ip}"
           json = rest_get("getIPRangedByIP", querystring)
           result = JSON.parse(json)
           return nil if result.empty?
@@ -192,8 +194,8 @@ module Proxy
 
         # helper function to get the whole subnet informarions by an ip address
         def get_network_by_ip(ip)
-          logger.debug("BAM get_network_by_ip " + ip)
-          querystring = "containerId=" + @config_id.to_s + "&type=IP4Network" + "&address=" + ip.to_s
+          logger.debug("BAM get_network_by_ip #{ip}")
+          querystring = "containerId=#{@config_id}&type=IP4Network&address=#{ip}"
           json = rest_get("getIPRangedByIP", querystring)
           result = JSON.parse(json)
           properties = parse_properties(result["properties"])
@@ -202,7 +204,8 @@ module Proxy
 
         # helper function to parse the properties scheme of bluecat into a hash
         #
-        # properies: a string that contains properties for the object in attribute=value format, with each separated by a | (pipe) character.
+        # properies: a string that contains properties for the object in attribute=value format,
+        # with each separated by a | (pipe) character.
         # For example, a host record object may have a properties field such as ttl=123|comments=my comment|.
         def parse_properties(properties)
           properties = properties.split("|")
@@ -217,36 +220,38 @@ module Proxy
         # wrapper function to add the dhcp reservation and dns records
         def add_host(options)
           # add the ip and hostname and mac as static
-          rest_post("addDeviceInstance", "configName=" + @config_name +
-                                         "&ipAddressMode=PASS_VALUE" \
-                                         "&ipEntity=" + options["ip"] +
-                                         "&viewName=" + @view_name +
-                                         "&zoneName=" + options["hostname"].split(".", 2).last +
-                                         "&deviceName=" + options["hostname"] +
-                                         "&recordName=" + options["hostname"] +
-                                         "&macAddressMode=PASS_VALUE" \
-                                         "&macEntity=" + options["mac"] +
-                                         "&options=AllowDuplicateHosts=true%7C")
+          rest_post("addDeviceInstance",
+                    "configName=#{@config_name} \
+                    &ipAddressMode=PASS_VALUE \
+                    &ipEntity=#{options['ip']} \
+                    &viewName=#{@view_name} \
+                    &zoneName=#{options['hostname'].split('.', 2).last} \
+                    &deviceName=#{options['hostname']} \
+                    &recordName=#{options['hostname']} \
+                    &macAddressMode=PASS_VALUE \
+                    &macEntity=#{options['mac']} \
+                    &options=AllowDuplicateHosts=true%7C")
 
           address_id = get_addressid_by_ip(options["ip"])
 
           # update the state of the ip from static to dhcp reserved
-          rest_put("changeStateIP4Address", "addressId=" + address_id +
-                                            "&targetState=MAKE_DHCP_RESERVED" \
-                                            "&macAddress=" + options["mac"])
+          rest_put("changeStateIP4Address",
+                   "addressId=#{address_id} \
+                    &targetState=MAKE_DHCP_RESERVED \
+                    &macAddress=#{options['mac']}")
 
-          unless options["nextServer"].nil? or options["filename"].nil?
+          unless options["nextServer"].nil? || options["filename"].nil?
             rest_post("addDHCPClientDeploymentOption",
-                      "entityId=" + address_id.to_s + "&name=tftp-server-name" + "&value=" + options["nextServer"].to_s)
+                      "entityId=#{address_id}&name=tftp-server-name&value=#{options['nextServer']}")
             rest_post("addDHCPClientDeploymentOption",
-                      "entityId=" + address_id.to_s + "&name=boot-file-name" + "&value=" + options["filename"].to_s)
+                      "entityId=#{address_id}&name=boot-file-name&value=#{options['filename']}")
           end
 
           # deploy the config
-          rest_post("deployServerConfig", "serverId=" + @server_id.to_s + "&properties=services=DHCP")
+          rest_post("deployServerConfig", "serverId=#{@server_id}&properties=services=DHCP")
           # lets wait a little bit for the complete dhcp deploy
           sleep 3
-          rest_post("deployServerConfig", "serverId=" + @server_id.to_s + "&properties=services=DNS")
+          rest_post("deployServerConfig", "serverId=#{@server_id}&properties=services=DNS")
           nil
         end
 
@@ -254,27 +259,27 @@ module Proxy
         # wrapper function to remove a ip record and depending dns records
         def remove_host(ip)
           ipid = get_addressid_by_ip(ip)
-          json = rest_get("getLinkedEntities", "entityId=" + ipid.to_s + "&type=HostRecord&start=0&count=2")
+          json = rest_get("getLinkedEntities", "entityId=#{ipid}&type=HostRecord&start=0&count=2")
           results = JSON.parse(json)
 
-          hosts = results.map do |result|
-            rest_delete("delete", "objectId=" + result["id"].to_s)
+          results.map do |result|
+            rest_delete("delete", "objectId=#{result['id']}")
           end
-          rest_delete("delete", "objectId=" + ipid.to_s)
+          rest_delete("delete", "objectId=#{ipid}")
 
-          rest_post("deployServerConfig", "serverId=" + @server_id.to_s + "&properties=services=DHCP,DNS")
+          rest_post("deployServerConfig", "serverId=#{@server_id}&properties=services=DHCP,DNS")
         end
 
         # public
         # fetches the next free address in a subnet
         # +end_ip not implemented+
-        def next_ip(netadress, start_ip, end_ip)
+        def next_ip(netadress, start_ip, _end_ip)
           networkid = get_networkid_by_ip(netadress)
 
           start_ip = IPAddress.parse(netadress).first if start_ip.to_s.empty?
 
-          properties = "offset=" + start_ip.to_s + "%7CexcludeDHCPRange=false"
-          result = rest_get("getNextIP4Address", "parentId=" + networkid.to_s + "&properties=" + properties)
+          properties = "offset=#{start_ip}%7CexcludeDHCPRange=false"
+          result = rest_get("getNextIP4Address", "parentId=#{networkid}&properties=#{properties}")
           return if result.empty?
 
           result.tr('"', "")
@@ -283,7 +288,7 @@ module Proxy
         # public
         # fetches all subnets under the parent_block
         def subnets
-          json = rest_get("getEntities", "parentId=" + @parent_block.to_s + "&type=IP4Network&start=0&count=10000")
+          json = rest_get("getEntities", "parentId=#{@parent_block}&type=IP4Network&start=0&count=10000")
           results = JSON.parse(json)
           subnets = results.map do |result|
             properties = parse_properties(result["properties"])
@@ -291,7 +296,7 @@ module Proxy
             opts = { routers: [properties["gateway"]] }
 
             if properties["gateway"].nil?
-              logger.error("subnet issue: " + properties["CIDR"] + " skipped, due missing gateway in bluecat")
+              logger.error("subnet issue: #{properties['CIDR']} skipped, due missing gateway in bluecat")
               next
             end
 
@@ -314,7 +319,7 @@ module Proxy
           net = IPAddress.parse(get_network_by_ip(network_address))
           subnet = ::Proxy::DHCP::Subnet.new(net.address, net.netmask)
 
-          json = rest_get("getNetworkLinkedProperties", "networkId=" + netid.to_s)
+          json = rest_get("getNetworkLinkedProperties", "networkId=#{netid}")
           results = JSON.parse(json)
 
           hosts = results.map do |result|
@@ -336,7 +341,7 @@ module Proxy
             next unless properties["state"] == "DHCP Reserved"
 
             hosttag = properties["host"].split(":")
-            name = hosttag[1] + "." + hosttag[3]
+            name = "#{hosttag[1]}.#{hosttag[3]}"
             opts = { hostname: name }
             ::Proxy::DHCP::Reservation.new(name, properties["address"], properties["macAddress"].tr("-", ":"), subnet, opts)
           end
@@ -352,12 +357,12 @@ module Proxy
           ipid = get_addressid_by_ip(ip)
           return nil if ipid.to_s == "0"
 
-          json = rest_get("getLinkedEntities", "entityId=" + ipid + "&type=HostRecord&start=0&count=2")
+          json = rest_get("getLinkedEntities", "entityId=#{ipid}&type=HostRecord&start=0&count=2")
           results = JSON.parse(json)
 
           if results.empty? || (results == "Link request is not supported")
             # no host record on ip, fetch mac only
-            json2 = rest_get("getIP4Address", "containerId=" + @config_id.to_s + "&address=" + ip)
+            json2 = rest_get("getIP4Address", "containerId=#{@config_id}&address=#{ip}")
             result2 = JSON.parse(json2)
             properties2 = parse_properties(result2["properties"])
             unless properties2["macAddress"].nil?
@@ -372,7 +377,7 @@ module Proxy
 
               next unless properties["reverseRecord"].to_s == "true".to_s
 
-              json2 = rest_get("getEntityById", "id=" + ipid)
+              json2 = rest_get("getEntityById", "id=#{ipid}")
               result2 = JSON.parse(json2)
               properties2 = parse_properties(result2["properties"])
               unless properties2["macAddress"].nil?
@@ -397,12 +402,12 @@ module Proxy
 
           logger.debug("subnet #{subnet} ")
 
-          json = rest_get("getMACAddress", "configurationId=" + @config_id.to_s + "&macAddress=" + mac.to_s)
+          json = rest_get("getMACAddress", "configurationId=#{@config_id}&macAddress=#{mac}")
           result = JSON.parse(json)
           macid = result["id"].to_s
           return if macid == "0"
 
-          json2 = rest_get("getLinkedEntities", "entityId=" + macid + "&type=IP4Address&start=0&count=9999")
+          json2 = rest_get("getLinkedEntities", "entityId=#{macid}&type=IP4Address&start=0&count=9999")
           result2 = JSON.parse(json2)
           return nil if result2.empty?
 

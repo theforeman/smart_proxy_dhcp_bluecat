@@ -23,7 +23,7 @@ if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.6.0")
 
     def rufo_command(*switches, rake_args)
       files_or_dirs = rake_args[:files_or_dirs] || "."
-      args = switches + files_or_dirs.split(" ")
+      args = switches + files_or_dirs.split
       Rufo::Command.run(args)
     end
 

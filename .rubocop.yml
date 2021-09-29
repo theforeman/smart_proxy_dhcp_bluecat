@@ -1,7 +1,5 @@
-inherit_from: .rubocop_todo.yml
-
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 2.5
   NewCops: enable
 
 Metrics:
@@ -11,9 +9,6 @@ Metrics:
 Bundler/DuplicatedGem:
   Enabled: false
 
-Layout/LeadingCommentSpace:
-  Enabled: false
-
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 
@@ -21,16 +16,8 @@ Layout/MultilineMethodCallBraceLayout:
 Style/ClassCheck:
   Enabled: false
 
-# Don't enforce certain methods, e.g. detect over find
-Style/CollectionMethods:
-  Enabled: false
-
 # Don't enforce documentation
 Style/Documentation:
-  Enabled: false
-
-# Both double and single quotes are OK
-Style/StringLiterals:
   Enabled: false
 
 Style/NumericPredicate:
@@ -41,66 +28,27 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/SymbolArray:
-  Enabled: false
+  EnforcedStyle: brackets
 
-Lint/AmbiguousRegexpLiteral:
-  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
 
 Lint/AssignmentInCondition:
-  Enabled: false
-
-Security/Eval:
-  Enabled: false
-
-Lint/RescueException:
-  Enabled: false
-
-Lint/UnusedBlockArgument:
-  Enabled: false
-
-Lint/UnusedMethodArgument:
-  Enabled: false
-
-Style/SymbolProc:
-  Enabled: false
-
-Style/Lambda:
-  Enabled: false
-
-Style/SingleLineMethods:
-  Enabled: false
+  AllowSafeAssignment: false
 
 Style/NumericLiterals:
   Enabled: false
 
-Style/AndOr:
-  EnforcedStyle: conditionals
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
 
 Style/TernaryParentheses:
-  EnforcedStyle: require_parentheses_when_complex
-
-Style/InverseMethods:
-  Enabled: false
-
-Bundler/OrderedGems:
-  Enabled: false
-
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-
-Layout/DotPosition:
-  Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: false
+  EnforcedStyle: require_parentheses
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
 
 Style/ParenthesesAroundCondition:
-  Enabled: false
-
-Style/ParallelAssignment:
   Enabled: false
 
 Layout/LineLength:

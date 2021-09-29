@@ -1,4 +1,4 @@
-require File.expand_path('lib/smart_proxy_dhcp_bluecat/dhcp_bluecat_version', __dir__)
+require File.expand_path("lib/smart_proxy_dhcp_bluecat/dhcp_bluecat_version", __dir__)
 require "date"
 
 Gem::Specification.new do |s|
