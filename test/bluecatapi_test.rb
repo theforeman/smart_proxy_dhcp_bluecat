@@ -11,8 +11,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -25,8 +25,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -35,14 +35,14 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response)
 
     expected = [
       ::Proxy::DHCP::Subnet.new("10.100.0.0", "255.255.255.0", routers: ["10.100.0.1"]),
-      ::Proxy::DHCP::Subnet.new("10.100.1.0", "255.255.255.0", routers: ["10.100.1.1"])
+      ::Proxy::DHCP::Subnet.new("10.100.1.0", "255.255.255.0", routers: ["10.100.1.1"]),
     ]
 
     assert_equal expected, @connection.subnets
@@ -53,8 +53,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -63,8 +63,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response)
 
@@ -73,8 +73,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response2)
 
@@ -88,8 +88,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -98,8 +98,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response)
 
@@ -113,8 +113,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -123,8 +123,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response)
 
@@ -133,8 +133,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response2)
 
@@ -151,8 +151,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -161,8 +161,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response)
 
@@ -171,8 +171,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response2)
 
@@ -181,8 +181,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response3)
 
@@ -191,8 +191,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response4)
 
@@ -209,8 +209,8 @@ class BluecatApiTest < Test::Unit::TestCase
     stub_request(:get, "https://bam.example.com/Services/REST/v1/login?password=admin&username=admin")
       .with(
         headers: {
-          "Content-Type" => "text/plain"
-        }
+          "Content-Type" => "text/plain",
+        },
       )
       .to_return(status: 200, body: fixture_response_login)
 
@@ -219,8 +219,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response)
 
@@ -229,8 +229,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response2)
 
@@ -239,8 +239,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response3)
 
@@ -249,8 +249,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response4)
 
@@ -259,8 +259,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response5)
 
@@ -269,8 +269,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response6)
 
@@ -279,8 +279,8 @@ class BluecatApiTest < Test::Unit::TestCase
       .with(
         headers: {
           "Authorization" => "BAMAuthToken: Cr1gQMTU3MTM3NzXXXXXXXXXXXXJlbWFuLXByb3h",
-          "Content-Type" => "application/json"
-        }
+          "Content-Type" => "application/json",
+        },
       )
       .to_return(status: 200, body: fixture_response7)
 

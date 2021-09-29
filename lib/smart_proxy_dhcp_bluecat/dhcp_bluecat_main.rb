@@ -60,11 +60,11 @@ module Proxy
         # foreman calls this method with a ip or a mac address
         def find_record(subnet_address, address)
           logger.debug("START find_record with subnet_address: #{net} address: #{address}")
-          records = if IPAddress.valid?(address)
-                      find_records_by_ip(subnet_address, address)
-                    else
-                      find_record_by_mac(subnet_address, address)
-                    end
+          if IPAddress.valid?(address)
+            records = find_records_by_ip(subnet_address, address)
+          else
+            records = find_record_by_mac(subnet_address, address)
+          end
           logger.debug("END find_record with subnet_address: #{subnet_address} address: #{address}")
           logger.debug("Returned: #{records.class}: #{records}")
           return [] if records.nil?

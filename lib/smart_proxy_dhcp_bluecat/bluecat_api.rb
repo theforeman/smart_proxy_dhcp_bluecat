@@ -223,13 +223,13 @@ module Proxy
           rest_post("addDeviceInstance",
                     "configName=#{@config_name} \
                     &ipAddressMode=PASS_VALUE \
-                    &ipEntity=#{options['ip']} \
+                    &ipEntity=#{options["ip"]} \
                     &viewName=#{@view_name} \
-                    &zoneName=#{options['hostname'].split('.', 2).last} \
-                    &deviceName=#{options['hostname']} \
-                    &recordName=#{options['hostname']} \
+                    &zoneName=#{options["hostname"].split(".", 2).last} \
+                    &deviceName=#{options["hostname"]} \
+                    &recordName=#{options["hostname"]} \
                     &macAddressMode=PASS_VALUE \
-                    &macEntity=#{options['mac']} \
+                    &macEntity=#{options["mac"]} \
                     &options=AllowDuplicateHosts=true%7C")
 
           address_id = get_addressid_by_ip(options["ip"])
@@ -238,13 +238,13 @@ module Proxy
           rest_put("changeStateIP4Address",
                    "addressId=#{address_id} \
                     &targetState=MAKE_DHCP_RESERVED \
-                    &macAddress=#{options['mac']}")
+                    &macAddress=#{options["mac"]}")
 
           unless options["nextServer"].nil? || options["filename"].nil?
             rest_post("addDHCPClientDeploymentOption",
-                      "entityId=#{address_id}&name=tftp-server-name&value=#{options['nextServer']}")
+                      "entityId=#{address_id}&name=tftp-server-name&value=#{options["nextServer"]}")
             rest_post("addDHCPClientDeploymentOption",
-                      "entityId=#{address_id}&name=boot-file-name&value=#{options['filename']}")
+                      "entityId=#{address_id}&name=boot-file-name&value=#{options["filename"]}")
           end
 
           # deploy the config
@@ -263,7 +263,7 @@ module Proxy
           results = JSON.parse(json)
 
           results.map do |result|
-            rest_delete("delete", "objectId=#{result['id']}")
+            rest_delete("delete", "objectId=#{result["id"]}")
           end
           rest_delete("delete", "objectId=#{ipid}")
 
@@ -296,7 +296,7 @@ module Proxy
             opts = { routers: [properties["gateway"]] }
 
             if properties["gateway"].nil?
-              logger.error("subnet issue: #{properties['CIDR']} skipped, due missing gateway in bluecat")
+              logger.error("subnet issue: #{properties["CIDR"]} skipped, due missing gateway in bluecat")
               next
             end
 

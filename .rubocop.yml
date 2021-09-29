@@ -33,6 +33,9 @@ Style/SymbolArray:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
 Lint/AssignmentInCondition:
   AllowSafeAssignment: false
 
@@ -45,6 +48,9 @@ Style/FormatStringToken:
 Style/TernaryParentheses:
   EnforcedStyle: require_parentheses
 
+Style/ConditionalAssignment:
+  EnforcedStyle: assign_inside_condition
+
 Style/EmptyMethod:
   EnforcedStyle: expanded
 
@@ -53,3 +59,24 @@ Style/ParenthesesAroundCondition:
 
 Layout/LineLength:
   Max: 130
+
+
+# rufo
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+# rufo
+Style/TrailingMethodEndStatement:
+  Enabled: false
+
+# rufo
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+# rufo
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+# rufo
+Layout/BlockAlignment:
+  Enabled: false

@@ -10,26 +10,26 @@ module Proxy
 
         def load_dependency_injection_wirings(conf, settings)
           conf.dependency :connection, (lambda do
-                                          ::Proxy::DHCP::BlueCat::BlueCatAPI.new(
-                                            settings[:scheme],
-                                            settings[:verify],
-                                            settings[:host],
-                                            settings[:parent_block],
-                                            settings[:view_name],
-                                            settings[:config_name],
-                                            settings[:config_id],
-                                            settings[:server_id],
-                                            settings[:username],
-                                            settings[:password]
-                                          )
-                                        end)
+                            ::Proxy::DHCP::BlueCat::BlueCatAPI.new(
+                              settings[:scheme],
+                              settings[:verify],
+                              settings[:host],
+                              settings[:parent_block],
+                              settings[:view_name],
+                              settings[:config_name],
+                              settings[:config_id],
+                              settings[:server_id],
+                              settings[:username],
+                              settings[:password]
+                            )
+                          end)
 
           conf.dependency :dhcp_provider, (lambda do
-                                             ::Proxy::DHCP::BlueCat::Provider.new(
-                                               c.get_dependency(:connection),
-                                               settings[:subnets]
-                                             )
-                                           end)
+                            ::Proxy::DHCP::BlueCat::Provider.new(
+                              c.get_dependency(:connection),
+                              settings[:subnets]
+                            )
+                          end)
         end
       end
     end
