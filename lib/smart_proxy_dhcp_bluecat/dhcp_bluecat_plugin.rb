@@ -4,9 +4,10 @@ module Proxy
       class Plugin < ::Proxy::Provider
         plugin :dhcp_bluecat, ::Proxy::DHCP::BlueCat::VERSION
 
-        validate_presence :scheme, :verify, :host, :parent_block, :view_name, :config_id, :config_name, :server_id, :username, :password
+        validate_presence :scheme, :verify, :host, :parent_block, :view_name, :config_id, :config_name, :server_id, :username,
+                          :password
 
-        requires :dhcp, '>= 1.16'
+        requires :dhcp, ">= 1.16"
 
         load_classes ::Proxy::DHCP::BlueCat::PluginConfiguration
         load_dependency_injection_wirings ::Proxy::DHCP::BlueCat::PluginConfiguration

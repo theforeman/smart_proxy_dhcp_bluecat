@@ -1,16 +1,12 @@
-inherit_from: .rubocop_todo.yml
-
 AllCops:
-  TargetRubyVersion: 2.0
+  TargetRubyVersion: 2.5
+  NewCops: enable
 
 Metrics:
   Enabled: false
 
 # There's if statement in the Gemfile
 Bundler/DuplicatedGem:
-  Enabled: false
-
-Layout/LeadingCommentSpace:
   Enabled: false
 
 Layout/MultilineMethodCallBraceLayout:
@@ -20,16 +16,8 @@ Layout/MultilineMethodCallBraceLayout:
 Style/ClassCheck:
   Enabled: false
 
-# Don't enforce certain methods, e.g. detect over find
-Style/CollectionMethods:
-  Enabled: false
-
 # Don't enforce documentation
 Style/Documentation:
-  Enabled: false
-
-# Both double and single quotes are OK
-Style/StringLiterals:
   Enabled: false
 
 Style/NumericPredicate:
@@ -40,87 +28,28 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/SymbolArray:
-  Enabled: false
+  EnforcedStyle: brackets
 
-Lint/AmbiguousRegexpLiteral:
-  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
 
 Lint/AssignmentInCondition:
-  Enabled: false
-
-Security/Eval:
-  Enabled: false
-
-Lint/RescueException:
-  Enabled: false
-
-Lint/UnusedBlockArgument:
-  Enabled: false
-
-Lint/UnusedMethodArgument:
-  Enabled: false
-
-Style/SymbolProc:
-  Enabled: false
-
-Style/Lambda:
-  Enabled: false
-
-# enable both hash-rocket and ruby19 hashmap syntax
-Style/HashSyntax:
-  Enabled: false
-
-Style/SingleLineMethods:
-  Enabled: false
-
-Style/FormatString:
-  Enabled: false
+  AllowSafeAssignment: false
 
 Style/NumericLiterals:
   Enabled: false
 
-Style/TrailingCommaInLiteral:
-  Enabled: false
-
-Performance/Casecmp:
-  Enabled: false
-
-Performance/RedundantMatch:
-  Enabled: true
-
-Performance/RedundantMerge:
-  Enabled: true
-
-#Allow both ['a', 'b'], %w[a b] and %w(a b) style arrays
-Style/WordArray:
-  Enabled: false
-
-Style/AndOr:
-  EnforcedStyle: conditionals
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
 
 Style/TernaryParentheses:
-  EnforcedStyle: require_parentheses_when_complex
-
-Style/InverseMethods:
-  Enabled: false
-
-Layout/FirstParameterIndentation:
-  EnforcedStyle: consistent
-
-Bundler/OrderedGems:
-  Enabled: false
-
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-
-Layout/DotPosition:
-  Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: false
+  EnforcedStyle: require_parentheses
 
 Style/ConditionalAssignment:
-  Enabled: false
+  EnforcedStyle: assign_inside_condition
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
@@ -128,15 +57,26 @@ Style/EmptyMethod:
 Style/ParenthesesAroundCondition:
   Enabled: false
 
-Layout/AlignHash:
+Layout/LineLength:
+  Max: 130
+
+
+# rufo
+Style/TrailingCommaInHashLiteral:
   Enabled: false
 
-Layout/AlignParameters:
+# rufo
+Style/TrailingMethodEndStatement:
   Enabled: false
 
-# disabled until we can configure "+" as concat sign
-Style/LineEndConcatenation:
+# rufo
+Style/TrailingCommaInArguments:
   Enabled: false
 
-Style/ParallelAssignment:
+# rufo
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+# rufo
+Layout/BlockAlignment:
   Enabled: false
