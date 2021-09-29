@@ -3,9 +3,9 @@ module Proxy
     module BlueCat
       class PluginConfiguration
         def load_classes
-          require 'dhcp_common/dhcp_common'
-          require 'smart_proxy_dhcp_bluecat/bluecat_api'
-          require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_main'
+          require "dhcp_common/dhcp_common"
+          require "smart_proxy_dhcp_bluecat/bluecat_api"
+          require "smart_proxy_dhcp_bluecat/dhcp_bluecat_main"
         end
 
         def load_dependency_injection_wirings(c, settings)

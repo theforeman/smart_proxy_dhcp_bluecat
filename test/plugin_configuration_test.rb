@@ -1,11 +1,11 @@
-require 'test_helper'
-require 'dhcp_common/dhcp_common'
-require 'smart_proxy_dhcp_bluecat/plugin_configuration'
-require 'smart_proxy_dhcp_bluecat/settings_validator'
-require 'smart_proxy_dhcp_bluecat/module_loader'
-require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_plugin'
-require 'smart_proxy_dhcp_bluecat/bluecat_api'
-require 'smart_proxy_dhcp_bluecat/dhcp_bluecat_main'
+require "test_helper"
+require "dhcp_common/dhcp_common"
+require "smart_proxy_dhcp_bluecat/plugin_configuration"
+require "smart_proxy_dhcp_bluecat/settings_validator"
+require "smart_proxy_dhcp_bluecat/module_loader"
+require "smart_proxy_dhcp_bluecat/dhcp_bluecat_plugin"
+require "smart_proxy_dhcp_bluecat/bluecat_api"
+require "smart_proxy_dhcp_bluecat/dhcp_bluecat_main"
 
 # class BlueCatDhcpProductionWiringTest < Test::Unit::TestCase
 #   def setup

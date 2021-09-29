@@ -1,1 +1,1 @@
-gem 'smart_proxy_dhcp_bluecat'
+gem "smart_proxy_dhcp_bluecat"
